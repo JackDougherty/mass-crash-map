@@ -1,2 +1,0 @@
-Dataset: mmucc
-Towns:West Hartford

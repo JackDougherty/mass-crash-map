@@ -60,16 +60,20 @@
       <div id="filters" class="mt3 f6">
 
         <h5 class="f5 mb1 mt3">Crash Participants</h5>
-        <label>
-          <input type="checkbox" id="vehiclesOnly" /> Motorists only
-        </label>
 
         <label>
-          <input type="checkbox" id="pedestrians" class="ml2" /> Pedestrians
+          <input type="checkbox" id="pedestrians" /> Pedestrians
+          <span class="participant-dot participant-dot-pedestrian" aria-hidden="true"></span>
         </label>
 
         <label>
           <input type="checkbox" id="cyclists" class="ml2" /> Cyclists
+          <span class="participant-dot participant-dot-cyclist" aria-hidden="true"></span>
+        </label>
+
+        <label>
+          <input type="checkbox" id="vehiclesOnly" class="ml2" /> Motorists only
+          <span class="participant-dot participant-dot-motorist" aria-hidden="true"></span>
         </label>
 
         <!-- Relabeled injury categories -->

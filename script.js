@@ -88,6 +88,11 @@ Papa.parse('./data/crashes.csv', {
 
         var heat = L.heatLayer([], { radius: 20 }).addTo(map);
         var individualPoints = L.layerGroup().addTo(map);
+        var participantColors = {
+            pedestrian: '#fb8072',
+            cyclist: '#fdb462',
+            motorist: '#bebada'
+        };
 
         var tsCoef = 100000.0 // original timestamp needs to be multiplied by this to work in JS
 
@@ -176,11 +181,16 @@ Papa.parse('./data/crashes.csv', {
 
                 crashesFiltered.map(function (crash) {
                     var diagramUrl = 'https://www.ctcrash.uconn.edu/MMUCCDiagram?id=' + crash.id + '&asImage=true'
+                    var markerColor = crash.p === 1
+                        ? participantColors.pedestrian
+                        : crash.c === 1
+                            ? participantColors.cyclist
+                            : participantColors.motorist;
 
                     var circle = L.circleMarker([crash.x, crash.y], {
                         radius: 5,
-                        color: '#ff0000',
-                        fillColor: '#ff0000',
+                        color: markerColor,
+                        fillColor: markerColor,
                         fillOpacity: 0.8,
                         opacity: 0.8,
                         weight: 0,

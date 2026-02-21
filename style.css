@@ -33,9 +33,29 @@
   pointer-events: none;
 }
 
+.participant-dot {
+    display: inline-block;
+    width: 0.65rem;
+    height: 0.65rem;
+    margin-right: 0.35rem;
+    border-radius: 999px;
+    vertical-align: middle;
+}
+
+.participant-dot-pedestrian {
+    background-color: #fb8072;
+}
+
+.participant-dot-cyclist {
+    background-color: #fdb462;
+}
+
+.participant-dot-motorist {
+    background-color: #bebada;
+}
+
 /*
 .points-only-wrapper:has(#pointsOnly:checked) {
   opacity: 0.5;
   pointer-events: none;
 }*/
-
