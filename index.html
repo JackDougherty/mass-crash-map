@@ -31,12 +31,13 @@
 
 <body class="helvetica">
 
+  <!--
   <div class="fixed bottom-0 left-0 mb1 ml2 top-z-index">
     <a href="https://bikewesthartford.org/" class="dim">
       <img src="./img/bikewesthartford.png" alt="Bike West Hartford" class="o-100 h2" /></a>
     <a href="https://www.picturedigits.com" class="dim ml1">
       <img src="./img/picturedigits.png" alt="Picturedigits" class="o-70 w4" /></a>
-  </div>
+  </div> -->
 
 
   <div id="map" class="vh-100 vw-100 bg-near-white"></div>
@@ -47,7 +48,12 @@
     <p class="measure">
       Heat map of motorist crashes in Massachusetts.<br>
       Adjust date and settings. Zoom in for crash details.<br>
-      <small><a href='https://github.com/bikewesthartford/wh-crashes/#readme'>Learn how it works</a>: updated by <a href='https://bikewesthartford.org'>Bike West Hartford</a>, based on police reports to <a href='https://www.ctcrash.uconn.edu'>CT Crash Data Repository</a>, which may be delayed 1-6 months.</small>
+      <!--
+        <small><a href='https://github.com/bikewesthartford/wh-crashes/#readme'>
+          Learn how it works</a>: updated by <a href='https://bikewesthartford.org'>Bike West Hartford</a>,
+          based on police reports to <a href='https://www.ctcrash.uconn.edu'>CT Crash Data Repository</a>,
+          which may be delayed 1-6 months.</small>
+      -->
     </p>
 
     <form class="ph2">
@@ -55,7 +61,28 @@
         <input type="text" class="js-range-slider" name="dates" value="" />
       </label>
 
-      <p class="f6 measure" id="statsText"></p>
+      <div id="statsDashboard" class="stats-dashboard mt2 mb2">
+        <div class="stat-card">
+          <div class="stat-value" id="statTotal">0</div>
+          <div class="stat-label">Total crashes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statPed">0</div>
+          <div class="stat-label">Involving pedestrians</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statCyc">0</div>
+          <div class="stat-label">Involving cyclists</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statFatal">0</div>
+          <div class="stat-label">Fatal crashes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statInjury">0</div>
+          <div class="stat-label">With injuries</div>
+        </div>
+      </div>
 
       <div id="filters" class="mt3 f6">
 

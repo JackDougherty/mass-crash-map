@@ -28,6 +28,46 @@
     width: 450px;
 }
 
+.stats-dashboard {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.stat-card {
+    flex: 1 1 calc(20% - 0.5rem);
+    min-width: 0;
+    background: #f7f7f7;
+    border: 1px solid #e4e4e4;
+    border-radius: 8px;
+    padding: 0.5rem 0.6rem;
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.stat-label {
+    font-size: 0.72rem;
+    color: #555;
+    margin-top: 0.2rem;
+}
+
+@media (max-width: 900px) {
+    .stat-card {
+        flex-basis: calc(33.333% - 0.5rem);
+    }
+}
+
+@media (max-width: 600px) {
+    .stat-card {
+        flex-basis: calc(50% - 0.5rem);
+    }
+}
+
 .intensity-wrapper.is-disabled {
     opacity: 0.5;
     pointer-events: none;

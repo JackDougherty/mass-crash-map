@@ -88,38 +88,63 @@ Papa.parse('./data/crashes.csv', {
 
         var heat = L.heatLayer([], { radius: 20 }).addTo(map);
         var individualPoints = L.layerGroup().addTo(map);
+        var markerCache = new Map();
+        var visibleMarkerIds = new Set();
         var participantColors = {
             pedestrian: '#fb8072',
             cyclist: '#fdb462',
             motorist: '#bebada'
         };
+        var getMarkerColor = function (crash) {
+            return crash.p === 1
+                ? participantColors.pedestrian
+                : crash.c === 1
+                    ? participantColors.cyclist
+                    : participantColors.motorist;
+        };
+        var getPopupHtml = function (crash) {
+            return '<strong>Crash ID ' + crash.id + '</strong><br />'
+                + tsToDate(crash.d * tsCoef) + ' at ' + crash.t
+                + '<br />Injury Severity: ' + (crash.s === 'K' ? 'Fatality' : crash.s === 'A' ? 'Any Injury' : 'Property damage only');
+        };
+        var getOrCreateMarker = function (crash) {
+            var cacheKey = String(crash.id);
+            var marker = markerCache.get(cacheKey);
+            if (marker) {
+                return marker;
+            }
+
+            var markerColor = getMarkerColor(crash);
+            marker = L.circleMarker([crash.x, crash.y], {
+                radius: 5,
+                color: markerColor,
+                fillColor: markerColor,
+                fillOpacity: 0.8,
+                opacity: 0.8,
+                weight: 0,
+            });
+
+            // Bind popup lazily so unclicked points avoid popup object allocation.
+            marker.on('click', function () {
+                if (!marker.getPopup()) {
+                    marker.bindPopup(getPopupHtml(crash), { minWidth: 300 });
+                }
+                marker.openPopup();
+            });
+
+            markerCache.set(cacheKey, marker);
+            return marker;
+        };
 
         var tsCoef = 100000.0 // original timestamp needs to be multiplied by this to work in JS
 
-        var updateStatsText = function (formattedFrom, formattedTo, crashesTotal, crashesPed, crashesCyc, filtered) {
-            var text = formattedFrom === formattedTo
-                ? ('On ' + formattedFrom)
-                : ('From ' + formattedFrom + ' to ' + formattedTo)
-
-            text += ', there ' + (crashesTotal === 1 ? 'was ' : 'were ') + (crashesTotal === 0 ? 'no' : crashesTotal.toLocaleString())
-            text += ' car crash' + (crashesTotal === 1 ? '' : 'es') + '.'
-
-            if (crashesTotal > 1) {
-                text += ' Of those, ' + (crashesPed > 0 ? crashesPed.toLocaleString() : ' none');
-                text += ' involved a pedestrian, and ';
-                text += (crashesCyc > 0 ? crashesCyc.toLocaleString() : ' none');
-                text += ' involved a cyclist.';
-            }
-
-            // modified statsText about filter results
-             text += ' <span class="i ' + (filtered ? '' : 'red') + '">'
-                 + 'Your checkboxes below show '
-                 + (filtered ? filtered.toLocaleString() : 'no ') + ' crash'
-                 + (filtered === 1 ? '' : 'es') + '.</span>'
-
-            $('#statsText').html(text)
-
-        }
+        var updateStatsDashboard = function (crashesTotal, crashesPed, crashesCyc, crashesFatal, crashesWithInjury) {
+            $('#statTotal').text(crashesTotal.toLocaleString());
+            $('#statPed').text(crashesPed.toLocaleString());
+            $('#statCyc').text(crashesCyc.toLocaleString());
+            $('#statFatal').text(crashesFatal.toLocaleString());
+            $('#statInjury').text(crashesWithInjury.toLocaleString());
+        };
 
         // Given `from` and `to` timestamps, updates the heatmap layer.
         var updateHeatLayer = function (from, to) {
@@ -154,28 +179,20 @@ Papa.parse('./data/crashes.csv', {
                         || ($('#propertyDamageOnly').prop('checked') ? point.s === 'O' : false))
             });
 
-
-            let a = new Set(crashes.map(x => x.id));
-            let b = new Set(crashesFiltered.map(x => x.id));
-            let a_minus_b = new Set([...a].filter(x => !b.has(x)));
-            console.log(a_minus_b)
-
-            updateStatsText(
-                tsToDate(from * 100000),  // Date from
-                tsToDate(to * 100000),  // Date to
-                crashes.length, // Total crashes
-                crashes.filter(function (p) { return p.p === 1 }).length,  // Ped crashes
-                crashes.filter(function (p) { return p.c === 1 }).length,  // Cyc crashes
-                crashesFiltered.length
-            )
-
-            // Despite zoom, clear individual points
-            individualPoints.clearLayers();
+            updateStatsDashboard(
+                crashes.length, // Total crashes in date range
+                crashes.filter(function (p) { return p.p === 1 }).length,  // Ped crashes in date range
+                crashes.filter(function (p) { return p.c === 1 }).length,  // Cyc crashes in date range
+                crashes.filter(function (p) { return p.s === 'K' }).length,  // Fatal crashes in date range
+                crashes.filter(function (p) { return p.s === 'A' }).length  // Any-injury crashes in date range
+            );
 
             // Update the heatlayer
             var intensity = $('#intensity').val();
 
-            var showPoints = $('#viewPoints').prop('checked');
+            var forcePoints = $('#viewPoints').prop('checked');
+            var autoPointsAtZoom = $('#viewHeatmap').prop('checked') && map.getZoom() >= 18;
+            var showPoints = forcePoints || autoPointsAtZoom;
             $('#intensity').prop('disabled', showPoints);
             $('.intensity-wrapper').toggleClass('is-disabled', showPoints);
 
@@ -183,34 +200,40 @@ Papa.parse('./data/crashes.csv', {
 
                 heat.setLatLngs([]);
 
-                crashesFiltered.map(function (crash) {
-                    var markerColor = crash.p === 1
-                        ? participantColors.pedestrian
-                        : crash.c === 1
-                            ? participantColors.cyclist
-                            : participantColors.motorist;
+                var nextVisibleMarkerIds = new Set();
+                crashesFiltered.forEach(function (crash) {
+                    var cacheKey = String(crash.id);
+                    nextVisibleMarkerIds.add(cacheKey);
+                    if (!visibleMarkerIds.has(cacheKey)) {
+                        individualPoints.addLayer(getOrCreateMarker(crash));
+                    }
+                });
 
-                    var circle = L.circleMarker([crash.x, crash.y], {
-                        radius: 5,
-                        color: markerColor,
-                        fillColor: markerColor,
-                        fillOpacity: 0.8,
-                        opacity: 0.8,
-                        weight: 0,
-                    }).bindPopup(
-                        '<strong>Crash ID ' + crash.id + '</strong><br />'
-                        + tsToDate(crash.d * tsCoef) + ' at ' + crash.t
-                        + '<br />Injury Severity: ' + (crash.s === 'K' ? 'Fatality' : crash.s === 'A' ? 'Any Injury' : 'Property damage only'),
-                        { minWidth: 300 }
-                    )
+                visibleMarkerIds.forEach(function (cacheKey) {
+                    if (!nextVisibleMarkerIds.has(cacheKey)) {
+                        var marker = markerCache.get(cacheKey);
+                        if (marker) {
+                            individualPoints.removeLayer(marker);
+                        }
+                    }
+                });
 
-                    individualPoints.addLayer(circle);
-                })
+                visibleMarkerIds = nextVisibleMarkerIds;
 
             }
 
             // Zoomed out enough for a heatmap
             else {
+                if (visibleMarkerIds.size > 0) {
+                    visibleMarkerIds.forEach(function (cacheKey) {
+                        var marker = markerCache.get(cacheKey);
+                        if (marker) {
+                            individualPoints.removeLayer(marker);
+                        }
+                    });
+                    visibleMarkerIds.clear();
+                }
+
                 heat.setLatLngs(
                     crashesFiltered.map(function (point) {
                         return [point.x, point.y, intensity / 3.0];
