@@ -28,9 +28,9 @@
     width: 450px;
 }
 
-#pointsOnly:checked ~ .intensity-wrapper {
-  opacity: 0.5;
-  pointer-events: none;
+.intensity-wrapper.is-disabled {
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 .participant-dot {
@@ -43,7 +43,7 @@
 }
 
 .participant-dot-pedestrian {
-    background-color: #fb8072;
+    background-color: #bebada;
 }
 
 .participant-dot-cyclist {
@@ -51,11 +51,5 @@
 }
 
 .participant-dot-motorist {
-    background-color: #bebada;
+    background-color: #b3de69;
 }
-
-/*
-.points-only-wrapper:has(#pointsOnly:checked) {
-  opacity: 0.5;
-  pointer-events: none;
-}*/

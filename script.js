@@ -133,9 +133,15 @@ Papa.parse('./data/crashes.csv', {
             })
 
             var crashesFiltered = crashes.filter(function (point) {
+                var selectedRoadway = $('#roadAll').prop('checked')
+                    ? 'all'
+                    : $('#roadLocalState').prop('checked')
+                        ? 'localState'
+                        : 'interstate';
                 var hasRoadClass = point.r !== null && point.r !== undefined;
-                var passesRoadway = !hasRoadClass || (($('#localStateUS').prop('checked') ? point.r !== 1 : false)
-                    || ($('#interstate').prop('checked') ? point.r === 1 : false));
+                var passesRoadway = !hasRoadClass || selectedRoadway === 'all'
+                    || (selectedRoadway === 'localState' && point.r !== 1)
+                    || (selectedRoadway === 'interstate' && point.r === 1);
 
                 return passesRoadway
 
@@ -169,10 +175,11 @@ Papa.parse('./data/crashes.csv', {
             // Update the heatlayer
             var intensity = $('#intensity').val();
 
-            let pointsOnly = $('#pointsOnly').prop('checked');
+            var showPoints = $('#viewPoints').prop('checked');
+            $('#intensity').prop('disabled', showPoints);
+            $('.intensity-wrapper').toggleClass('is-disabled', showPoints);
 
-            // If zoomed in all the way, show points instead of a heatmap
-            if ( map.getZoom() >= 18 || pointsOnly ) {
+            if (showPoints) {
 
                 heat.setLatLngs([]);
 
@@ -271,8 +278,9 @@ Papa.parse('./data/crashes.csv', {
         })
 
         // Set default properties
-        $('#filters input').not('#pointsOnly').prop('checked', 'checked');
+        $('#filters input[type="checkbox"]').prop('checked', 'checked');
         $('#propertyDamageOnly').prop('checked', false);
+        $('#viewHeatmap').prop('checked', true);
         $('#intensity').val(5);
         updateHeatLayer(initFrom, initTo);
 

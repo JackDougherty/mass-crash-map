@@ -94,25 +94,36 @@
 
         <h5 class="f5 mb1 mt3">Roadways</h5>
         <label>
-          <input type="checkbox" id="localStateUS" /> Local-State-US
+          <input type="radio" name="roadwayType" id="roadAll" checked="checked" /> All
         </label>
         <label>
-          <input type="checkbox" id="interstate" class="ml2" /> Interstate Highway
+          <input type="radio" name="roadwayType" id="roadLocalState" class="ml2" /> Local and state roads
+        </label>
+        <label>
+          <input type="radio" name="roadwayType" id="roadInterstate" class="ml2" /> Interstates
+        </label>
+        
+        <br>
+
+        <label>
+          <input type="checkbox" id="labels" checked="checked" class="mt1" /> Street labels
         </label>
 
 
-        <h5 class="f5 mb1 mt3">Map Appearance</h5>
-        <label>
-          <input type="checkbox" id="labels" checked="checked" /> Street labels
-        </label>
+        <h5 class="f5 mb1 mt3">Heatmap</h5>
 
-        <label>
-          <input type="checkbox" id="pointsOnly" class="ml3" /> Points only 📍
-          <br>
-          <span class="intensity-wrapper dib pt2">
-            Intensity <input type="range" value="10" min="1" max="30" id="intensity" class="v-mid mr2" />
-          </span>
-        </label>
+        <div class="view-mode-toggle mt2">
+          <label class="mr2">
+            <input type="radio" name="viewMode" id="viewHeatmap" checked="checked" /> Heatmap
+          </label>
+          <label>
+            <input type="radio" name="viewMode" id="viewPoints" /> Points
+          </label>
+        </div>
+
+        <span class="intensity-wrapper dib pt2">
+          Heatmap intensity <input type="range" value="10" min="1" max="30" id="intensity" class="v-mid mr2" />
+        </span>
 
       </div>
 
