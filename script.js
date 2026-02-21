@@ -144,10 +144,7 @@ Papa.parse('./data/crashes.csv', {
                         || ($('#pedestrians').prop('checked') ? point.p === 1 : false))
 
                     && (($('#fatalInjury').prop('checked') ? point.s === 'K' : false)
-                        || ($('#seriousInjury').prop('checked') ? point.s === 'A' : false)
-                        || ($('#otherInjury').prop('checked') ? point.s === 'B' : false)
-                        || ($('#otherInjury').prop('checked') ? point.s === 'C' : false)
-                        || ($('#otherInjury').prop('checked') ? !point.s : false) // when injury type = null
+                        || ($('#anyInjury').prop('checked') ? point.s === 'A' : false)
                         || ($('#propertyDamageOnly').prop('checked') ? point.s === 'O' : false))
             });
 
@@ -180,7 +177,6 @@ Papa.parse('./data/crashes.csv', {
                 heat.setLatLngs([]);
 
                 crashesFiltered.map(function (crash) {
-                    var diagramUrl = 'https://www.ctcrash.uconn.edu/MMUCCDiagram?id=' + crash.id + '&asImage=true'
                     var markerColor = crash.p === 1
                         ? participantColors.pedestrian
                         : crash.c === 1
@@ -197,8 +193,7 @@ Papa.parse('./data/crashes.csv', {
                     }).bindPopup(
                         '<strong>Crash ID ' + crash.id + '</strong><br />'
                         + tsToDate(crash.d * tsCoef) + ' at ' + crash.t
-                        + '<a href="' + diagramUrl + '" target="_blank"><img src="' + diagramUrl + '" alt="Crash diagram" /></a>'
-                        + '<br />Injury Severity: ' + (crash.s === 'K' ? 'Fatal' : crash.s === 'A' ? 'Serious' : crash.s === 'B' ? 'Other' : crash.s === 'C' ? 'Other' : 'Property damage only'),
+                        + '<br />Injury Severity: ' + (crash.s === 'K' ? 'Fatality' : crash.s === 'A' ? 'Any Injury' : 'Property damage only'),
                         { minWidth: 300 }
                     )
 
@@ -277,6 +272,7 @@ Papa.parse('./data/crashes.csv', {
 
         // Set default properties
         $('#filters input').not('#pointsOnly').prop('checked', 'checked');
+        $('#propertyDamageOnly').prop('checked', false);
         $('#intensity').val(5);
         updateHeatLayer(initFrom, initTo);
 
