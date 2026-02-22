@@ -6,26 +6,34 @@
     border-bottom: 0 !important;
 }
 
-.irs-bar,
-.irs-handle i,
-.irs-single,
-.irs-from,
-.irs-to {
-    background-color: #111 !important;
-}
-
-.irs-single::before,
-.irs-from::before,
-.irs-to::before {
-    border-top-color: #111 !important;
-}
-
 .top-z-index {
     z-index: 999;
 }
 
 #legend {
     width: 450px;
+}
+
+.date-range-controls {
+    display: flex;
+    gap: 0.75rem;
+    align-items: end;
+}
+
+.date-range-controls label {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.75rem;
+    color: #444;
+    gap: 0.2rem;
+}
+
+.date-range-controls input[type="date"] {
+    border: 1px solid #d2d2d2;
+    border-radius: 6px;
+    padding: 0.35rem 0.45rem;
+    font-size: 0.82rem;
+    background: #fff;
 }
 
 .stats-dashboard {

@@ -36,6 +36,19 @@ function tsToDate(ts) {
     });
 }
 
+function tsToInputDate(ts) {
+    var d = new Date(ts);
+    var yyyy = d.getFullYear();
+    var mm = String(d.getMonth() + 1).padStart(2, '0');
+    var dd = String(d.getDate()).padStart(2, '0');
+    return yyyy + '-' + mm + '-' + dd;
+}
+
+function inputDateToTS(inputDate) {
+    var d = new Date(inputDate + 'T00:00:00');
+    return dateToTS(d);
+}
+
 // display initial data, where Jan = 0 and Dec = 11
 var initFrom = dateToTS(new Date(2022, 0, 1));
 var initTo = dateToTS(new Date(2026, 0, 1));
@@ -254,33 +267,48 @@ Papa.parse('./data/crashes.csv', {
             initTo = maxCrashDate;
         }
 
-        // Initialize Ion range slider
-        var slider = $(".js-range-slider").ionRangeSlider({
-            type: 'double',
+        var dateFromInput = $('#dateFrom');
+        var dateToInput = $('#dateTo');
+        var minDateString = tsToInputDate(minCrashDate);
+        var maxDateString = tsToInputDate(maxCrashDate);
+        var fromDateString = tsToInputDate(initFrom);
+        var toDateString = tsToInputDate(initTo);
 
-            min: minCrashDate,
-            max: maxCrashDate,
+        dateFromInput.attr('min', minDateString);
+        dateFromInput.attr('max', maxDateString);
+        dateToInput.attr('min', minDateString);
+        dateToInput.attr('max', maxDateString);
+        dateFromInput.val(fromDateString);
+        dateToInput.val(toDateString);
 
-            from: initFrom,
-            to: initTo,
-
-            prettify: tsToDate,
-            grid: true,
-            grid_num: 4,
-
-            onChange: function (sliderData) {
-                updateHeatLayer(sliderData.from, sliderData.to);
+        var updateFromInputs = function () {
+            var fromTS = inputDateToTS(dateFromInput.val());
+            var toTS = inputDateToTS(dateToInput.val());
+            if (Number.isNaN(fromTS) || Number.isNaN(toTS)) {
+                return;
             }
+            updateHeatLayer(fromTS, toTS);
+        };
+
+        dateFromInput.on('change', function () {
+            if (dateFromInput.val() > dateToInput.val()) {
+                dateToInput.val(dateFromInput.val());
+            }
+            updateFromInputs();
+        });
+
+        dateToInput.on('change', function () {
+            if (dateToInput.val() < dateFromInput.val()) {
+                dateFromInput.val(dateToInput.val());
+            }
+            updateFromInputs();
         });
 
 
         // Re-draw heat layer when any filter (apart from street labels)
         // is changed
         $('#filters input').not('#labels').change(function (e) {
-            updateHeatLayer(
-                slider[0].value.split(';')[0],
-                slider[0].value.split(';')[1]
-            )
+            updateFromInputs();
         })
 
 
@@ -294,10 +322,7 @@ Papa.parse('./data/crashes.csv', {
         })
 
         map.on('zoomend', function () {
-            updateHeatLayer(
-                slider[0].value.split(';')[0],
-                slider[0].value.split(';')[1]
-            )
+            updateFromInputs();
         })
 
         // Set default properties
