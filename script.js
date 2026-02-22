@@ -365,6 +365,6 @@ Papa.parse('./data/crash-mapc-2024.csv', {
 })
 
 L.control.attribution({
-    prefix: 'View <a href="https://github.com/bikewesthartford/wh-crashes">code on GitHub</a> \
-      and <a href="https://github.com/Picturedigits/hartford-crashes">original version by PictureDigits</a>'
+    prefix: 'View <a href="https://github.com/JackDougherty/mass-crash-map">code on GitHub</a> \
+      and <a href="https://github.com/Picturedigits/hartford-crashes">original version by Picturedigits</a>'
 }).addTo(map)
