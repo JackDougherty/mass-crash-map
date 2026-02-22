@@ -53,7 +53,7 @@ function inputDateToTS(inputDate) {
 var initFrom = dateToTS(new Date(2022, 0, 1));
 var initTo = dateToTS(new Date(2026, 0, 1));
 
-Papa.parse('./data/crashes.csv', {
+Papa.parse('./data/crash-mapc-2024.csv', {
     download: true,
     header: true,
     dynamicTyping: true,
@@ -77,6 +77,14 @@ Papa.parse('./data/crashes.csv', {
             if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
                 return null;
             }
+            var hasInterstateColumn = Object.prototype.hasOwnProperty.call(row, 'interstate');
+            var roadwayClass = null;
+            if (hasInterstateColumn) {
+                // CSV contract: interstate=1 means true; blank means false/local roads.
+                roadwayClass = Number(row.interstate) === 1 ? 1 : 0;
+            } else if (row.r != null && row.r !== '') {
+                roadwayClass = Number(row.r) === 1 ? 1 : 0;
+            }
 
             return {
                 source: row.source,
@@ -88,10 +96,10 @@ Papa.parse('./data/crashes.csv', {
                 t: timeString,
                 d: dateToTS(dateValue) / 100000.0,
                 s: severity,
-                p: Number(row.ped) === 1 ? 1 : 0,
+                p: Number(row.pedestrian) === 1 ? 1 : 0,
                 c: Number(row.cyclist) === 1 ? 1 : 0,
-                // New CSV format does not include roadway class.
-                r: null
+                // Roadway class: 1 = interstate, 0 = local/state, null = unknown (legacy fallback only).
+                r: roadwayClass
             };
         };
 
@@ -176,8 +184,7 @@ Papa.parse('./data/crashes.csv', {
                     : $('#roadLocalState').prop('checked')
                         ? 'localState'
                         : 'interstate';
-                var hasRoadClass = point.r !== null && point.r !== undefined;
-                var passesRoadway = !hasRoadClass || selectedRoadway === 'all'
+                var passesRoadway = selectedRoadway === 'all'
                     || (selectedRoadway === 'localState' && point.r !== 1)
                     || (selectedRoadway === 'interstate' && point.r === 1);
 
