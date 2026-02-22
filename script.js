@@ -2,7 +2,7 @@ var map = L.map('map', {
     zoomControl: false,
     center: [42.34, -71.08],
     zoom: 13,
-    minZoom: 12,
+    minZoom: 10,
     attributionControl: false,
     preferCanvas: true
 })
@@ -90,8 +90,10 @@ Papa.parse('./data/crash-mapc-2024.csv', {
                 source: row.source,
                 id: row.id,
                 muni: row.muni,
+                police: row.police,
                 x: lat,
                 y: lng,
+                rpa: row.rpa == null ? '' : String(row.rpa).trim().toUpperCase(),
                 k: dateString,
                 t: timeString,
                 d: dateToTS(dateValue) / 100000.0,
@@ -126,6 +128,9 @@ Papa.parse('./data/crash-mapc-2024.csv', {
         var getPopupHtml = function (crash) {
             return '<strong>Crash ID ' + crash.id + '</strong><br />'
                 + tsToDate(crash.d * tsCoef) + ' at ' + crash.t
+                + '<br />Source: ' + (crash.source || 'Unknown')
+                + '<br />Municipality: ' + (crash.muni || 'Unknown')
+                + '<br />Police force: ' + (crash.police || 'Unknown')
                 + '<br />Injury Severity: ' + (crash.s === 'K' ? 'Fatality' : crash.s === 'A' ? 'Any Injury' : 'Property damage only');
         };
         var getOrCreateMarker = function (crash) {
@@ -168,7 +173,7 @@ Papa.parse('./data/crash-mapc-2024.csv', {
         };
 
         // Given `from` and `to` timestamps, updates the heatmap layer.
-        var updateHeatLayer = function (from, to) {
+        var updateHeatLayer = function (from, to, shouldFitMap) {
 
             from = dateToTS(new Date(from * 1).setHours(0, 0, 0, 0)) / tsCoef;
             to = dateToTS(new Date(to * 1).setHours(23, 59, 59, 0)) / tsCoef;
@@ -179,6 +184,7 @@ Papa.parse('./data/crash-mapc-2024.csv', {
             })
 
             var crashesFiltered = crashes.filter(function (point) {
+                var selectedRpa = $('#rpaFilter').val();
                 var selectedRoadway = $('#roadAll').prop('checked')
                     ? 'all'
                     : $('#roadLocalState').prop('checked')
@@ -188,7 +194,9 @@ Papa.parse('./data/crash-mapc-2024.csv', {
                     || (selectedRoadway === 'localState' && point.r !== 1)
                     || (selectedRoadway === 'interstate' && point.r === 1);
 
-                return passesRoadway
+                return point.rpa === selectedRpa
+
+                    && passesRoadway
 
                     && (($('#vehiclesOnly').prop('checked') ? (point.c === 0 && point.p === 0) : false)
                         || ($('#cyclists').prop('checked') ? point.c === 1 : false)
@@ -261,6 +269,15 @@ Papa.parse('./data/crash-mapc-2024.csv', {
                 )
             }
 
+            if (shouldFitMap && crashesFiltered.length > 0) {
+                map.fitBounds(
+                    crashesFiltered.map(function (point) {
+                        return [point.x, point.y];
+                    }),
+                    { padding: [24, 24] }
+                );
+            }
+
         }
 
         var crashDates = data.map(function (point) { return point.d * tsCoef; });
@@ -288,13 +305,13 @@ Papa.parse('./data/crash-mapc-2024.csv', {
         dateFromInput.val(fromDateString);
         dateToInput.val(toDateString);
 
-        var updateFromInputs = function () {
+        var updateFromInputs = function (shouldFitMap) {
             var fromTS = inputDateToTS(dateFromInput.val());
             var toTS = inputDateToTS(dateToInput.val());
             if (Number.isNaN(fromTS) || Number.isNaN(toTS)) {
                 return;
             }
-            updateHeatLayer(fromTS, toTS);
+            updateHeatLayer(fromTS, toTS, Boolean(shouldFitMap));
         };
 
         dateFromInput.on('change', function () {
@@ -309,6 +326,10 @@ Papa.parse('./data/crash-mapc-2024.csv', {
                 dateFromInput.val(dateToInput.val());
             }
             updateFromInputs();
+        });
+
+        $('#rpaFilter').on('change', function () {
+            updateFromInputs(true);
         });
 
 
@@ -337,7 +358,8 @@ Papa.parse('./data/crash-mapc-2024.csv', {
         $('#propertyDamageOnly').prop('checked', false);
         $('#viewHeatmap').prop('checked', true);
         $('#intensity').val(5);
-        updateHeatLayer(initFrom, initTo);
+        $('#rpaFilter').val('MAPC');
+        updateHeatLayer(initFrom, initTo, true);
 
     }
 })
