@@ -76,28 +76,54 @@
     }
 }
 
+#intensity {
+    width: 120px;
+}
+
 .intensity-wrapper.is-disabled {
     opacity: 0.5;
     pointer-events: none;
 }
 
-.participant-dot {
+.participant-icon {
     display: inline-block;
-    width: 0.65rem;
-    height: 0.65rem;
-    margin-right: 0.35rem;
-    border-radius: 999px;
+    width: 1rem;
+    height: 1rem;
     vertical-align: middle;
+    fill: currentColor;
+    flex-shrink: 0;
 }
 
-.participant-dot-pedestrian {
-    background-color: #bebada;
+.participant-icon-dot {
+    width: 0.75rem;
+    height: 0.75rem;
 }
 
-.participant-dot-cyclist {
-    background-color: #fdb462;
+label:has(svg) {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+    gap: 4px;
+    margin-right: 4px;
+    padding: 3px 6px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    opacity: 0.35;
+    user-select: none;
+    transition: opacity 0.15s, border-color 0.15s;
 }
 
-.participant-dot-motorist {
-    background-color: #b3de69;
+label:has(svg):hover {
+    opacity: 0.65;
+    border-color: #999;
+}
+
+label:has(input[type="checkbox"]:checked) {
+    opacity: 1;
+    border-color: #777;
+}
+
+label:has(svg) input[type="checkbox"] {
+    display: none;
 }

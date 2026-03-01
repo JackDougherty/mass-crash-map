@@ -113,17 +113,21 @@ Papa.parse('./data/crash-mapc-2024.csv', {
         var individualPoints = L.layerGroup().addTo(map);
         var markerCache = new Map();
         var visibleMarkerIds = new Set();
-        var participantColors = {
-            pedestrian: '#fb8072',
-            cyclist: '#fdb462',
-            motorist: '#bebada'
-        };
-        var getMarkerColor = function (crash) {
-            return crash.p === 1
-                ? participantColors.pedestrian
-                : crash.c === 1
-                    ? participantColors.cyclist
-                    : participantColors.motorist;
+        var severityColors = { K: '#d73027', A: '#fc8d59', O: '#74add1' };
+        var pedPath = 'M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9 1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1l-5.2 2.2v4.7h2v-3.4l1.8-.7-1.6 8.1-4.9-1-.4 2 7 1.4z';
+        var cycPath = 'M15.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM5 12c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.5c-1.9 0-3.5-1.6-3.5-3.5S3.1 13.5 5 13.5s3.5 1.6 3.5 3.5-1.6 3.5-3.5 3.5zm5.8-10 2.4-2.4.8.8c1.3 1.3 3 2.1 5.1 2.1V9c-1.5 0-2.7-.6-3.6-1.5l-1.9-1.9c-.5-.4-1-.6-1.6-.6s-1.1.2-1.4.6L7.8 8.4c-.4.4-.6.9-.6 1.4 0 .6.2 1.1.6 1.4L11 14v5h2v-6l-2.2-2.5zM19 12c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.5c-1.9 0-3.5-1.6-3.5-3.5s1.6-3.5 3.5-3.5 3.5 1.6 3.5 3.5-1.6 3.5-3.5 3.5z';
+        var markerIcons = {};
+        ['K', 'A', 'O'].forEach(function (sev) {
+            var c = severityColors[sev];
+            markerIcons[sev] = {
+                pedestrian: L.divIcon({ html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="' + c + '"><path d="' + pedPath + '"/></svg>', className: '', iconSize: [16, 16], iconAnchor: [8, 8] }),
+                cyclist:    L.divIcon({ html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="' + c + '"><path d="' + cycPath + '"/></svg>', className: '', iconSize: [16, 16], iconAnchor: [8, 8] }),
+                motorist:   L.divIcon({ html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10" width="8" height="8" fill="' + c + '"><circle cx="5" cy="5" r="4"/></svg>', className: '', iconSize: [8, 8], iconAnchor: [4, 4] }),
+            };
+        });
+        var getMarkerIcon = function (crash) {
+            var sev = crash.s === 'K' ? 'K' : crash.s === 'A' ? 'A' : 'O';
+            return crash.p === 1 ? markerIcons[sev].pedestrian : crash.c === 1 ? markerIcons[sev].cyclist : markerIcons[sev].motorist;
         };
         var getPopupHtml = function (crash) {
             return '<strong>Crash ID ' + crash.id + '</strong><br />'
@@ -140,15 +144,7 @@ Papa.parse('./data/crash-mapc-2024.csv', {
                 return marker;
             }
 
-            var markerColor = getMarkerColor(crash);
-            marker = L.circleMarker([crash.x, crash.y], {
-                radius: 5,
-                color: markerColor,
-                fillColor: markerColor,
-                fillOpacity: 0.8,
-                opacity: 0.8,
-                weight: 0,
-            });
+            marker = L.marker([crash.x, crash.y], { icon: getMarkerIcon(crash) });
 
             // Bind popup lazily so unclicked points avoid popup object allocation.
             marker.on('click', function () {
@@ -185,14 +181,9 @@ Papa.parse('./data/crash-mapc-2024.csv', {
 
             var crashesFiltered = crashes.filter(function (point) {
                 var selectedRpa = $('#rpaFilter').val();
-                var selectedRoadway = $('#roadAll').prop('checked')
-                    ? 'all'
-                    : $('#roadLocalState').prop('checked')
-                        ? 'localState'
-                        : 'interstate';
-                var passesRoadway = selectedRoadway === 'all'
-                    || (selectedRoadway === 'localState' && point.r !== 1)
-                    || (selectedRoadway === 'interstate' && point.r === 1);
+                var localState = $('#roadLocalState').prop('checked');
+                var interstate = $('#roadInterstate').prop('checked');
+                var passesRoadway = (localState && point.r !== 1) || (interstate && point.r === 1);
 
                 return point.rpa === selectedRpa
 
