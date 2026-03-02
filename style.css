@@ -85,6 +85,12 @@
     pointer-events: none;
 }
 
+label.is-disabled {
+    opacity: 0.35;
+    pointer-events: none;
+    cursor: default;
+}
+
 .participant-icon {
     display: inline-block;
     width: 1rem;
