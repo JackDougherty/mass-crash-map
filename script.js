@@ -123,8 +123,8 @@ Papa.parse('./data/crash-mapc-2024.csv', {
         ['K', 'A', 'O'].forEach(function (sev) {
             var c = severityColors[sev];
             markerIcons[sev] = {
-                pedestrian: L.divIcon({ html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="' + c + '"><path d="' + pedPath + '"/></svg>', className: '', iconSize: [16, 16], iconAnchor: [8, 8] }),
-                cyclist:    L.divIcon({ html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="' + c + '"><path d="' + cycPath + '"/></svg>', className: '', iconSize: [16, 16], iconAnchor: [8, 8] }),
+                pedestrian: L.divIcon({ html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="' + c + '" style="pointer-events:none"><path d="' + pedPath + '"/></svg>', className: '', iconSize: [16, 16], iconAnchor: [8, 8] }),
+                cyclist:    L.divIcon({ html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="' + c + '" style="pointer-events:none"><path d="' + cycPath + '"/></svg>', className: '', iconSize: [16, 16], iconAnchor: [8, 8] }),
             };
         });
         var getPopupHtml = function (crash) {
