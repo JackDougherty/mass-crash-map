@@ -71,7 +71,7 @@ Papa.parse('./data/crash-mapc-2024.csv', {
             }
 
             var severityCode = row.severity == null || row.severity === '' ? null : Number(row.severity);
-            var severity = !severityCode ? 'O' : severityCode === 1 ? 'K' : severityCode === 2 ? 'A' : 'O';
+            var severity = !severityCode ? 'O' : severityCode === 1 ? 'K' : severityCode === 2 ? 'I' : 'O';
             var lat = Number(row.lat);
             var lng = Number(row.lng);
             if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
@@ -113,14 +113,14 @@ Papa.parse('./data/crash-mapc-2024.csv', {
         var individualPoints = L.layerGroup().addTo(map);
         var markerCache = new Map();
         var visibleMarkerIds = new Set();
-        var severityColors = { K: '#e41a1c', A: '#fdb462', O: '#74add1' };
+        var severityColors = { K: '#e41a1c', I: '#fdb462', O: '#74add1' };
         var pedPath = 'M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9 1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1l-5.2 2.2v4.7h2v-3.4l1.8-.7-1.6 8.1-4.9-1-.4 2 7 1.4z';
         var cycPath = 'M15.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM5 12c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.5c-1.9 0-3.5-1.6-3.5-3.5S3.1 13.5 5 13.5s3.5 1.6 3.5 3.5-1.6 3.5-3.5 3.5zm5.8-10 2.4-2.4.8.8c1.3 1.3 3 2.1 5.1 2.1V9c-1.5 0-2.7-.6-3.6-1.5l-1.9-1.9c-.5-.4-1-.6-1.6-.6s-1.1.2-1.4.6L7.8 8.4c-.4.4-.6.9-.6 1.4 0 .6.2 1.1.6 1.4L11 14v5h2v-6l-2.2-2.5zM19 12c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.5c-1.9 0-3.5-1.6-3.5-3.5s1.6-3.5 3.5-3.5 3.5 1.6 3.5 3.5-1.6 3.5-3.5 3.5z';
         // Pre-create 6 divIcons (2 types × 3 severities) for ped/cyclist only.
         // Motorist circles are rendered on canvas for performance.
         var canvasRenderer = L.canvas();
         var markerIcons = {};
-        ['K', 'A', 'O'].forEach(function (sev) {
+        ['K', 'I', 'O'].forEach(function (sev) {
             var c = severityColors[sev];
             markerIcons[sev] = {
                 pedestrian: L.divIcon({ html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="' + c + '" style="pointer-events:none"><path d="' + pedPath + '"/></svg>', className: '', iconSize: [16, 16], iconAnchor: [8, 8] }),
@@ -133,7 +133,7 @@ Papa.parse('./data/crash-mapc-2024.csv', {
                 + '<br />Source: ' + (crash.source || 'Unknown')
                 + '<br />Municipality: ' + (crash.muni || 'Unknown')
                 + '<br />Police force: ' + (crash.police || 'Unknown')
-                + '<br />Injury Severity: ' + (crash.s === 'K' ? 'Fatality' : crash.s === 'A' ? 'Any Injury' : 'Property damage only');
+                + '<br />Injury Severity: ' + (crash.s === 'K' ? 'Fatality' : crash.s === 'I' ? 'Any Injury' : 'Property damage only');
         };
         var getOrCreateMarker = function (crash) {
             var cacheKey = String(crash.id);
@@ -142,7 +142,7 @@ Papa.parse('./data/crash-mapc-2024.csv', {
                 return marker;
             }
 
-            var sev = crash.s === 'K' ? 'K' : crash.s === 'A' ? 'A' : 'O';
+            var sev = crash.s === 'K' ? 'K' : crash.s === 'I' ? 'I' : 'O';
             if (crash.p === 1) {
                 marker = L.marker([crash.x, crash.y], { icon: markerIcons[sev].pedestrian });
             } else if (crash.c === 1) {
@@ -208,7 +208,7 @@ Papa.parse('./data/crash-mapc-2024.csv', {
                         || ($('#pedestrians').prop('checked') ? point.p === 1 : false))
 
                     && (($('#fatalInjury').prop('checked') ? point.s === 'K' : false)
-                        || ($('#anyInjury').prop('checked') ? point.s === 'A' : false)
+                        || ($('#anyInjury').prop('checked') ? point.s === 'I' : false)
                         || ($('#propertyDamageOnly').prop('checked') ? point.s === 'O' : false))
             });
 
@@ -217,7 +217,7 @@ Papa.parse('./data/crash-mapc-2024.csv', {
                 crashes.filter(function (p) { return p.p === 1 }).length,  // Ped crashes in date range
                 crashes.filter(function (p) { return p.c === 1 }).length,  // Cyc crashes in date range
                 crashes.filter(function (p) { return p.s === 'K' }).length,  // Fatal crashes in date range
-                crashes.filter(function (p) { return p.s === 'A' }).length  // Any-injury crashes in date range
+                crashes.filter(function (p) { return p.s === 'I' }).length  // Any-injury crashes in date range
             );
 
             // Update the heatlayer
