@@ -101,7 +101,6 @@ function normalizeCrash(row) {
     return {
         source: row.source, id: row.id, muni: row.muni, police: row.police,
         x: lat, y: lng,
-        rpa: row.rpa == null ? '' : String(row.rpa).trim().toUpperCase(),
         k: dateString, t: timeString,
         d: dateToTS(dateValue) / 100000.0,
         s: severity,
@@ -246,8 +245,8 @@ function updateFromInputs(shouldFitMap) {
     updateHeatLayer(fromTS, toTS, Boolean(shouldFitMap));
 }
 
-function loadRpa(rpa) {
-    Papa.parse('./data/' + rpa.toLowerCase() + '.csv', {
+function loadRegion(region) {
+    Papa.parse('./data/' + region.toLowerCase() + '.csv', {
         download: true,
         header: true,
         dynamicTyping: true,
@@ -291,8 +290,8 @@ dateToInput.on('change', function () {
     updateFromInputs();
 });
 
-$('#rpaFilter').on('change', function () {
-    loadRpa($(this).val());
+$('#regionFilter').on('change', function () {
+    loadRegion($(this).val());
 });
 
 // Re-draw heat layer when any filter (apart from street labels) is changed
@@ -337,9 +336,9 @@ $('#filters input[type="checkbox"]').prop('checked', 'checked');
 $('#propertyDamageOnly').prop('checked', false);
 $('#viewHeatmap').prop('checked', true);
 $('#intensity').val(5);
-$('#rpaFilter').val('MAPC');
+$('#regionFilter').val('MAPC');
 updateViewModeAvailability();
-loadRpa('MAPC');
+loadRegion('MAPC');
 
 L.control.attribution({
     prefix: 'Code and data by <a href="https://github.com/Picturedigits/mass-crash-map">Picturedigits</a>'
