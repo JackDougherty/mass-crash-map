@@ -31,13 +31,14 @@ Then visit `http://localhost:8000`.
 
 ## Data
 
-Current data file: `data/crash-mapc-2024.csv`
+Current default data file: `data/metro.csv`
+
+Current time period: 01 Jan 2022 to 31 Dec 2025 
 
 Key CSV fields used:
 - `lat`, `lng` for map position
 - `date`, `time` for crash timestamp
-- `severity`, `pedestrian`, `cyclist`, `interstate` for filters
-- `rpa` for planning region filtering
+- `severity`, `pedestrian`, `cyclist`, `other`, `interstate` for filters
 - `source`, `muni`, `police` for popup details
 
 ## License
