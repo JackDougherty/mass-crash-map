@@ -74,6 +74,7 @@ var markerIcons = {};
     markerIcons[sev] = {
         pedestrian: L.divIcon({ html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" style="pointer-events:none"><circle cx="12" cy="12" r="12" fill="' + c + '" fill-opacity="0.5"/><path d="' + pedPath + '" fill="white"/></svg>', className: '', iconSize: [26, 26], iconAnchor: [13, 13] }),
         cyclist:    L.divIcon({ html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" style="pointer-events:none"><circle cx="12" cy="12" r="12" fill="' + c + '" fill-opacity="0.5"/><path d="' + cycPath + '" fill="white"/></svg>', className: '', iconSize: [26, 26], iconAnchor: [13, 13] }),
+        other:      L.divIcon({ html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" style="pointer-events:none"><circle cx="12" cy="12" r="12" fill="' + c + '" fill-opacity="0.5"/><line x1="7" y1="7" x2="17" y2="17" stroke="white" stroke-width="2.5" stroke-linecap="round"/><line x1="17" y1="7" x2="7" y2="17" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg>', className: '', iconSize: [26, 26], iconAnchor: [13, 13] }),
     };
 });
 
@@ -106,6 +107,7 @@ function normalizeCrash(row) {
         s: severity,
         p: Number(row.pedestrian) === 1 ? 1 : 0,
         c: Number(row.cyclist) === 1 ? 1 : 0,
+        o: Number(row.other) === 1 ? 1 : 0,
         // Roadway class: 1 = interstate, 0 = local/state, null = unknown (legacy fallback only).
         r: roadwayClass
     };
@@ -117,7 +119,10 @@ function getPopupHtml(crash) {
         + '<br />Source: ' + (crash.source || 'Unknown')
         + '<br />Municipality: ' + (crash.muni || 'Unknown')
         + '<br />Police force: ' + (crash.police || 'Unknown')
-        + '<br />Injury Severity: ' + (crash.s === 'K' ? 'Fatality' : crash.s === 'I' ? 'Any Injury' : 'Property damage only');
+        + '<br />Injury Severity: ' + (crash.s === 'K' ? 'Fatality' : crash.s === 'I' ? 'Any Injury' : 'Property damage only')
+        + '<br />Pedestrian: ' + (crash.p === 1 ? 'True' : 'False')
+        + '<br />Cyclist: ' + (crash.c === 1 ? 'True' : 'False')
+        + '<br />Other vulnerable road user: ' + (crash.o === 1 ? 'True' : 'False');
 }
 
 function getOrCreateMarker(crash) {
@@ -125,10 +130,12 @@ function getOrCreateMarker(crash) {
     var marker = markerCache.get(cacheKey);
     if (marker) return marker;
     var sev = crash.s === 'K' ? 'K' : crash.s === 'I' ? 'I' : 'O';
-    if (crash.p === 1) {
+    if (crash.p === 1 && crash.c !== 1) {
         marker = L.marker([crash.x, crash.y], { icon: markerIcons[sev].pedestrian });
-    } else if (crash.c === 1) {
+    } else if (crash.c === 1 && crash.p !== 1) {
         marker = L.marker([crash.x, crash.y], { icon: markerIcons[sev].cyclist });
+    } else if (crash.o === 1) {
+        marker = L.marker([crash.x, crash.y], { icon: markerIcons[sev].other });
     } else {
         var color = severityColors[sev];
         marker = L.circleMarker([crash.x, crash.y], {
@@ -170,9 +177,10 @@ function updateHeatLayer(from, to, shouldFitMap) {
 
         return passesRoadway
 
-            && (($('#vehiclesOnly').prop('checked') ? (point.c === 0 && point.p === 0) : false)
+            && (($('#vehiclesOnly').prop('checked') ? (point.c === 0 && point.p === 0 && point.o === 0) : false)
                 || ($('#cyclists').prop('checked') ? point.c === 1 : false)
-                || ($('#pedestrians').prop('checked') ? point.p === 1 : false))
+                || ($('#pedestrians').prop('checked') ? point.p === 1 : false)
+                || ($('#other').prop('checked') ? point.o === 1 : false))
 
             && (($('#fatalInjury').prop('checked') ? point.s === 'K' : false)
                 || ($('#anyInjury').prop('checked') ? point.s === 'I' : false)
