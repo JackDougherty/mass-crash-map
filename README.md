@@ -1,5 +1,8 @@
 # mass-crash-map
 
+Live map
+https://picturedigits.github.io/mass-crash-map
+
 Interactive Massachusetts crash map built with Leaflet.
 
 ![](misc/interface.png)
