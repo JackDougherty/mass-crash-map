@@ -1,6 +1,7 @@
 # mass-crash-map
 
 Live map
+
 https://picturedigits.github.io/mass-crash-map
 
 Interactive Massachusetts crash map built with Leaflet.
@@ -33,7 +34,7 @@ Then visit `http://localhost:8000`.
 
 Current default data file: `data/metro.csv`
 
-Current time period: 01 Jan 2022 to 31 Dec 2025 
+Current time period: 01 Jan 2022 to 31 Dec 2025
 
 Key CSV fields used:
 - `lat`, `lng` for map position
