@@ -72,8 +72,8 @@ var markerIcons = {};
 ['K', 'I', 'O'].forEach(function (sev) {
     var c = severityColors[sev];
     markerIcons[sev] = {
-        pedestrian: L.divIcon({ html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="' + c + '" style="pointer-events:none"><path d="' + pedPath + '"/></svg>', className: '', iconSize: [16, 16], iconAnchor: [8, 8] }),
-        cyclist:    L.divIcon({ html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="' + c + '" style="pointer-events:none"><path d="' + cycPath + '"/></svg>', className: '', iconSize: [16, 16], iconAnchor: [8, 8] }),
+        pedestrian: L.divIcon({ html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" style="pointer-events:none"><circle cx="12" cy="12" r="12" fill="' + c + '" fill-opacity="0.5"/><path d="' + pedPath + '" fill="white"/></svg>', className: '', iconSize: [26, 26], iconAnchor: [13, 13] }),
+        cyclist:    L.divIcon({ html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" style="pointer-events:none"><circle cx="12" cy="12" r="12" fill="' + c + '" fill-opacity="0.5"/><path d="' + cycPath + '" fill="white"/></svg>', className: '', iconSize: [26, 26], iconAnchor: [13, 13] }),
     };
 });
 
@@ -133,7 +133,7 @@ function getOrCreateMarker(crash) {
     } else {
         var color = severityColors[sev];
         marker = L.circleMarker([crash.x, crash.y], {
-            renderer: canvasRenderer, radius: 4,
+            renderer: canvasRenderer, radius: 6,
             color: color, fillColor: color, fillOpacity: 0.8, opacity: 0.8, weight: 0,
         });
     }
@@ -300,6 +300,14 @@ $('#filters input').not('#labels').change(function () {
     updateFromInputs();
 });
 
+// Toggle legend body on mobile
+$('#legendToggle').on('click', function () {
+    var isOpen = $('#legendBody').hasClass('is-open');
+    $('#legendBody').toggleClass('is-open', !isOpen);
+    $(this).attr('aria-expanded', !isOpen);
+    $(this).html(isOpen ? '&#9660;' : '&#9650;');
+});
+
 // Toggle street/town labels
 $('#labels').change(function () {
     if ($('#labels').prop('checked')) {
@@ -334,6 +342,5 @@ updateViewModeAvailability();
 loadRpa('MAPC');
 
 L.control.attribution({
-    prefix: 'View <a href="https://github.com/JackDougherty/mass-crash-map">code on GitHub</a> \
-      and <a href="https://github.com/Picturedigits/hartford-crashes">original version by Picturedigits</a>'
+    prefix: 'Code and data by <a href="https://github.com/Picturedigits/mass-crash-map">Picturedigits</a>'
 }).addTo(map)
