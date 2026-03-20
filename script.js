@@ -130,9 +130,9 @@ function getOrCreateMarker(crash) {
     var marker = markerCache.get(cacheKey);
     if (marker) return marker;
     var sev = crash.s === 'K' ? 'K' : crash.s === 'I' ? 'I' : 'O';
-    if (crash.p === 1 && crash.c !== 1) {
+    if (crash.p === 1 && crash.c !== 1 && crash.o !== 1) {
         marker = L.marker([crash.x, crash.y], { icon: markerIcons[sev].pedestrian });
-    } else if (crash.c === 1 && crash.p !== 1) {
+    } else if (crash.c === 1 && crash.p !== 1 && crash.o !== 1) {
         marker = L.marker([crash.x, crash.y], { icon: markerIcons[sev].cyclist });
     } else if (crash.o === 1) {
         marker = L.marker([crash.x, crash.y], { icon: markerIcons[sev].other });
