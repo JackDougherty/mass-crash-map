@@ -32,6 +32,8 @@ Then visit `http://localhost:8000`.
 
 ## Data
 
+More info to come about data sources and definitions...
+
 Current default data file: `data/metro.csv`
 
 Current time period: 01 Jan 2022 to 31 Dec 2025
