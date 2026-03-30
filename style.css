@@ -66,15 +66,15 @@
     }
 }
 
-.partner-logos {
+.title-row {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 0.4rem;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
 }
 
-.partner-logos img {
-    height: 56px;
+.partner-logo img {
+    height: 42px;
     width: auto;
     display: block;
 }
