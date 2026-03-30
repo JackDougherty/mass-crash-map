@@ -72,9 +72,9 @@ var markerIcons = {};
 ['K', 'I', 'O'].forEach(function (sev) {
     var c = severityColors[sev];
     markerIcons[sev] = {
-        pedestrian: L.divIcon({ html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" style="pointer-events:none"><circle cx="12" cy="12" r="12" fill="' + c + '" fill-opacity="0.5"/><path d="' + pedPath + '" fill="white"/></svg>', className: '', iconSize: [26, 26], iconAnchor: [13, 13] }),
-        cyclist:    L.divIcon({ html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" style="pointer-events:none"><circle cx="12" cy="12" r="12" fill="' + c + '" fill-opacity="0.5"/><path d="' + cycPath + '" fill="white"/></svg>', className: '', iconSize: [26, 26], iconAnchor: [13, 13] }),
-        other:      L.divIcon({ html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" style="pointer-events:none"><circle cx="12" cy="12" r="12" fill="' + c + '" fill-opacity="0.5"/><line x1="7" y1="7" x2="17" y2="17" stroke="white" stroke-width="2.5" stroke-linecap="round"/><line x1="17" y1="7" x2="7" y2="17" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg>', className: '', iconSize: [26, 26], iconAnchor: [13, 13] }),
+        pedestrian: L.divIcon({ html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" style="pointer-events:none"><circle cx="12" cy="12" r="12" fill="' + c + '" fill-opacity="0.9"/><path d="' + pedPath + '" fill="white"/></svg>', className: '', iconSize: [26, 26], iconAnchor: [13, 13] }),
+        cyclist:    L.divIcon({ html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" style="pointer-events:none"><circle cx="12" cy="12" r="12" fill="' + c + '" fill-opacity="0.9"/><path d="' + cycPath + '" fill="white"/></svg>', className: '', iconSize: [26, 26], iconAnchor: [13, 13] }),
+        other:      L.divIcon({ html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" style="pointer-events:none"><circle cx="12" cy="12" r="12" fill="' + c + '" fill-opacity="0.9"/><line x1="7" y1="7" x2="17" y2="17" stroke="white" stroke-width="2.5" stroke-linecap="round"/><line x1="17" y1="7" x2="7" y2="17" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg>', className: '', iconSize: [26, 26], iconAnchor: [13, 13] }),
     };
 });
 

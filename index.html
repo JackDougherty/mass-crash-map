@@ -29,51 +29,41 @@
 
 <body class="helvetica">
 
-  <!--
-  <div class="fixed bottom-0 left-0 mb1 ml2 top-z-index">
-    <a href="https://bikewesthartford.org/" class="dim">
-      <img src="./img/bikewesthartford.png" alt="Bike West Hartford" class="o-100 h2" /></a>
-    <a href="https://www.picturedigits.com" class="dim ml1">
-      <img src="./img/picturedigits.png" alt="Picturedigits" class="o-70 w4" /></a>
-  </div> -->
-
-
   <div id="map" class="vh-100 vw-100 bg-near-white"></div>
 
   <div id="legend" class="bg-white fixed top-0 left-0 pa3 mt2 ml2 br1 o-90 top-z-index">
     <div class="legend-header">
       <div>
-        <h1 class="f3 mt0 mb0">DRAFT Massachusetts Crash Map</h1>
+        <h1 class="f3 mt0 mb0">Massachusetts Crash Map</h1>
         <p class="f6 gray mt1 mb0">See data and definitions <a href="https://github.com/picturedigits/mass-crash-map/" target="_blank" class="dim">on GitHub.</a></p>
+        
+        <!-- Partner logos -->
+        <div class="partner-logos">
+          <a href="https://bostoncyclistsunion.org/" target="_blank"><img src="https://avatars.githubusercontent.com/u/154257958?s=280&v=4" alt="Boston Cyclists Union" /></a>
+          <a href="https://www.picturedigits.com" target="_blank"><img src="https://www.picturedigits.com/images/picturedigits.og.png" alt="Picturedigits" /></a>
+        </div>
+
       </div>
       <button id="legendToggle" aria-label="Toggle filters" aria-expanded="false">&#9660;</button>
     </div>
 
     <div id="legendBody">
-    <form class="ph2">
+    <form>
 
-      <div id="statsDashboard" class="stats-dashboard mt2 mb2">
-        <div class="stat-card">
-          <div class="stat-value" id="statTotal">0</div>
-          <div class="stat-label">Crashes in date range</div>
+        <h5 class="f5 mb1 mt3">Show crashes as</h5>
+
+        <div class="view-mode-toggle mt2">
+          <label class="mr2">
+            <input type="radio" name="viewMode" id="viewHeatmap" checked="checked" /> Heatmap clusters
+            <span class="intensity-wrapper ml3">
+              Adjust intensity <input type="range" value="10" min="1" max="30" id="intensity" class="v-mid" />
+            </span>
+          </label>
+          <br/>
+          <label>
+            <input type="radio" name="viewMode" id="viewPoints" /> Symbol points
+          </label>
         </div>
-        <div class="stat-card">
-          <div class="stat-value" id="statPed">0</div>
-          <div class="stat-label">Involving pedestrians</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value" id="statCyc">0</div>
-          <div class="stat-label">Involving cyclists</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value" id="statFatal">0</div>
-          <div class="stat-label">With fatalities</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value" id="statInjury">0</div>
-          <div class="stat-label">With injuries</div>
-        </div>
-      </div>
 
       <div id="filters" class="mt3 f6">
 
@@ -97,39 +87,48 @@
         </label>
       </div>
 
-        <h5 class="f5 mb1 mt3">Show crashes as</h5>
 
-        <div class="view-mode-toggle mt2">
-          <label class="mr2">
-            <input type="radio" name="viewMode" id="viewHeatmap" checked="checked" /> Heatmap clusters
-            <span class="intensity-wrapper ml3">
-              Adjust intensity <input type="range" value="10" min="1" max="30" id="intensity" class="v-mid" />
-            </span>
-          </label>
-          <br/>
-          <label>
-            <input type="radio" name="viewMode" id="viewPoints" /> Symbol points
-          </label>
+      <div id="statsDashboard" class="stats-dashboard mt3 mb2">
+        <div class="stat-card">
+          <div class="stat-value" id="statTotal">0</div>
+          <div class="stat-label">Crashes in date range</div>
         </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statPed">0</div>
+          <div class="stat-label">Involving pedestrians</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statCyc">0</div>
+          <div class="stat-label">Involving cyclists</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statFatal">0</div>
+          <div class="stat-label">With fatalities</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statInjury">0</div>
+          <div class="stat-label">With injuries</div>
+        </div>
+      </div>
 
-        <h5 class="f5 mb1 mt3">Crash involved</h5>
+        <h5 class="f5 mb1 mt3">Crash involved <span class="info-tip" tabindex="0">?<span class="info-tip-content"><ul><li><b>Other</b> includes accidents with two or more types of vulnerable users (e.g., a pedestrian and a cyclist), or a single vulnerable user who is not a cyclist or a pedestrian (e.g., a motorised wheelchair).</li></ul></span></span></h5>
 
         <label>
           <input type="checkbox" id="pedestrians" />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="participant-icon" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor" fill-opacity="0.5"/><path d="M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9 1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1l-5.2 2.2v4.7h2v-3.4l1.8-.7-1.6 8.1-4.9-1-.4 2 7 1.4z" fill="white"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="participant-icon" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor" fill-opacity="0.55"/><path d="M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9 1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1l-5.2 2.2v4.7h2v-3.4l1.8-.7-1.6 8.1-4.9-1-.4 2 7 1.4z" fill="white"/></svg>
           Pedestrians
         </label>
 
         <label>
           <input type="checkbox" id="cyclists" />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="participant-icon" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor" fill-opacity="0.5"/><path d="M15.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM5 12c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.5c-1.9 0-3.5-1.6-3.5-3.5S3.1 13.5 5 13.5s3.5 1.6 3.5 3.5-1.6 3.5-3.5 3.5zm5.8-10 2.4-2.4.8.8c1.3 1.3 3 2.1 5.1 2.1V9c-1.5 0-2.7-.6-3.6-1.5l-1.9-1.9c-.5-.4-1-.6-1.6-.6s-1.1.2-1.4.6L7.8 8.4c-.4.4-.6.9-.6 1.4 0 .6.2 1.1.6 1.4L11 14v5h2v-6l-2.2-2.5zM19 12c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.5c-1.9 0-3.5-1.6-3.5-3.5s1.6-3.5 3.5-3.5 3.5 1.6 3.5 3.5-1.6 3.5-3.5 3.5z" fill="white"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="participant-icon" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor" fill-opacity="0.55"/><path d="M15.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM5 12c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.5c-1.9 0-3.5-1.6-3.5-3.5S3.1 13.5 5 13.5s3.5 1.6 3.5 3.5-1.6 3.5-3.5 3.5zm5.8-10 2.4-2.4.8.8c1.3 1.3 3 2.1 5.1 2.1V9c-1.5 0-2.7-.6-3.6-1.5l-1.9-1.9c-.5-.4-1-.6-1.6-.6s-1.1.2-1.4.6L7.8 8.4c-.4.4-.6.9-.6 1.4 0 .6.2 1.1.6 1.4L11 14v5h2v-6l-2.2-2.5zM19 12c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.5c-1.9 0-3.5-1.6-3.5-3.5s1.6-3.5 3.5-3.5 3.5 1.6 3.5 3.5-1.6 3.5-3.5 3.5z" fill="white"/></svg>
           Cyclists
         </label>
 
         <label>
           <input type="checkbox" id="other" />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="participant-icon" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor" fill-opacity="0.5"/><line x1="7" y1="7" x2="17" y2="17" stroke="white" stroke-width="2.5" stroke-linecap="round"/><line x1="17" y1="7" x2="7" y2="17" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg>
-          Ped+Cyclist or Other road users
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="participant-icon" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor" fill-opacity="0.55"/><line x1="7" y1="7" x2="17" y2="17" stroke="white" stroke-width="2.5" stroke-linecap="round"/><line x1="17" y1="7" x2="7" y2="17" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg>
+          Other
         </label>
 
         <label>
