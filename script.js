@@ -269,8 +269,8 @@ function loadRegion(region) {
             data = result.data.map(normalizeCrash).filter(Boolean);
 
             var crashDates = data.map(function (point) { return point.d * tsCoef; });
-            var minCrashDate = crashDates.length ? Math.min.apply(Math, crashDates) : dateToTS(new Date(2015, 0, 1));
-            var maxCrashDate = crashDates.length ? Math.max.apply(Math, crashDates) : dateToTS(new Date(2026, 0, 1));
+            var minCrashDate = crashDates.length ? crashDates.reduce(function(a, b) { return a < b ? a : b; }) : dateToTS(new Date(2015, 0, 1));
+            var maxCrashDate = crashDates.length ? crashDates.reduce(function(a, b) { return a > b ? a : b; }) : dateToTS(new Date(2026, 0, 1));
 
             var from = Math.max(initFrom, minCrashDate);
             var to = Math.min(initTo, maxCrashDate);
