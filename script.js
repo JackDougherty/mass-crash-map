@@ -258,6 +258,7 @@ function loadRegion(region) {
         download: true,
         header: true,
         dynamicTyping: true,
+        error: function(err) { alert('Failed to laod data: ' + err.message); },
         complete: function (result) {
             // Clear existing map state before loading new region
             individualPoints.clearLayers();
