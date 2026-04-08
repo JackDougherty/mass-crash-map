@@ -235,20 +235,15 @@ label:has(svg) {
     margin-bottom: 5px;
     padding: 3px 4px;
     border-radius: 4px;
-    border: 1px solid #ccc;
-    opacity: 0.55;
+    border: 1px solid #bbb;
+    color: #bbb;
     user-select: none;
-    transition: opacity 0.15s, border-color 0.15s;
-}
-
-label:has(svg):hover {
-    opacity: 0.78;
-    border-color: #999;
+    transition: color 0.15s, border-color 0.15s;
 }
 
 label:has(input[type="checkbox"]:checked) {
-    opacity: 1;
-    border-color: #777;
+    color: #222;
+    border-color: #111;
 }
 
 label:has(svg) input[type="checkbox"] {
