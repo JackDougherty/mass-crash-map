@@ -23,6 +23,10 @@ python3 -m http.server 8000
 - Then visit `http://localhost:8000`.
 - Note: it will only work by double-clicking if the CSV is located on a remote server, not a local file.
 
+## Credits 
+- Map design by [Jack Dougherty](https://jackdougherty.org) and [Ilya Ilyankou](https://ilyankou.com) at [Picturedigits Ltd](https://www.picturedigits.com)
+- Boston core data cleaning and merging by [Boston University Spark!](https://www.bu.edu/spark/) Spring 2026 team: Abby Gualda, Alan Shao, Ethan Freshman, Konstantinos Ilias, Michelle Voong, Nicole Liu, Suhani Kapoor, and Thomas Shin
+
 ## Data
 
 **TODO** Add More info to come about data sources and definitions...
@@ -122,10 +126,6 @@ jupyter lab
 - **Cambridge PD geocoding:** ~16,911 Cambridge crash records have street addresses but no latitude/longitude. Geocoding these requires a Google Cloud API key (estimated cost ~$200). Commented-out code using `googlemaps` is included at the bottom of the notebook for future use.
 - **Duplicate detection runtime:** The nested-loop duplicate finder is O(n²) in the worst case. It is optimized by sorting on datetime and breaking early, but may be slow on very large datasets.
 - **Time unreliability:** Time data across sources varies in precision and reliability. This is why spatial proximity is weighted more heavily (0.7) than time proximity (0.3) in the confidence score.
-
-
-
-
 
 
 ## License
