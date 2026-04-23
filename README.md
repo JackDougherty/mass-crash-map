@@ -130,4 +130,4 @@ jupyter lab
 
 ## License
 
-MIT.
+GNU General Public License v3.0
