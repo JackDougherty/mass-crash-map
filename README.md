@@ -23,7 +23,7 @@ python3 -m http.server 8000
 - Then visit `http://localhost:8000`.
 - Note: it will only work by double-clicking if the CSV is located on a remote server, not a local file.
 
-## Credits 
+## Credits
 - Map design by [Jack Dougherty](https://jackdougherty.org) and [Ilya Ilyankou](https://ilyankou.com) at [Picturedigits Ltd](https://www.picturedigits.com)
 - Boston core data cleaning and merging by [Boston University Spark!](https://www.bu.edu/spark/) Spring 2026 team: Abby Gualda, Alan Shao, Ethan Freshman, Konstantinos Ilias, Michelle Voong, Nicole Liu, Suhani Kapoor, and Thomas Shin
 
@@ -105,11 +105,12 @@ https://drive.google.com/drive/folders/14pxdYQC73GC8VB6watQnqMJ_IBIHDGVv
 pandas
 numpy
 requests
+matplotlib
 ```
 
 Install via:
 ```bash
-pip install pandas numpy
+pip install pandas numpy requests matplotlib
 ```
 
 Run on local computer:
