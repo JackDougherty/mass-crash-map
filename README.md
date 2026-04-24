@@ -2,14 +2,14 @@
 
 Live map https://picturedigits.github.io/mass-crash-map
 
-Interactive Massachusetts crash map built with Leaflet. It loads crash records from CSV and supports:
+Interactive map of crashes involving vulnerable users (pedestrians, cyclists, others) and motorists in Massachusetts. Built with LeafletJS and uploads CSV data that has been pre-processed from MassDOT for five regions, plus municipal data for Boston core region. Features:
 
-- Automatically shifts from heatmap clusters (zoomed out) to symbol points (zoomed in)
-- Date range filtering
-- Crash type filters (pedestrian, cyclist, motorists only)
-- Injury severity filters
-- Roadway filters (all, local/state, interstate)
-- Click symbol points for popups
+- Mobile-first design to compress or expand legend on small screens
+- Map automatically shifts from heatmap clusters (zoomed out) to symbol points (zoomed in)
+- Filter by crash type (involving pedestrians, cyclists, other vulnerable users, or motorists only)
+- Crash type filters (pedestrian, cyclist, other vulnerable users, motorists only)
+- Filter by date range, injury severity, and interstate highway (for MassDOT data only)
+- Click symbol points for popup info about specific crashes
 
 ![](misc/interface.png)
 
@@ -93,7 +93,7 @@ Three CSV files are produced:
 | File | Description |
 |---|---|
 | `boston-core-all.csv` | All Boston core crash records merged from all four sources, including duplicates |
-| `boston-core-clean.csv` | One record per crash event; duplicates removed, MassDOT records prioritized |
+| `boston-core-clean.csv` | One record per crash event; duplicates removed, MassDOT records prioritized, appears in crash map |
 | `boston-core-duplicates.csv` | Side-by-side pairs of records flagged as duplicates, with distance, time difference, and confidence score |
 
 If the notebook cannot be run, pre-generated outputs are available at:

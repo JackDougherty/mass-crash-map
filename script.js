@@ -346,9 +346,9 @@ $('#filters input[type="checkbox"]').prop('checked', 'checked');
 $('#propertyDamageOnly').prop('checked', false);
 $('#viewHeatmap').prop('checked', true);
 $('#intensity').val(5);
-$('#regionFilter').val('Metro');
+$('#regionFilter').val('boston-metro');
 updateViewModeAvailability();
-loadRegion('Metro');
+loadRegion('boston-metro');
 
 L.control.attribution({
     prefix: 'Code and data by <a href="https://github.com/Picturedigits/mass-crash-map">Picturedigits</a>'
