@@ -82,10 +82,25 @@ function normalizeCrash(row) {
     if (!row || row.id == null || !row.date || row.lat == null || row.lng == null) return null;
     var dateString = String(row.date).trim();
     var timeString = row.time ? String(row.time).trim() : '12:00 AM';
-    // Parse MM/DD/YYYY as local date
-    var dateParts = dateString.split('/');
-    var dateValue = new Date(Number(dateParts[2]), Number(dateParts[0]) - 1, Number(dateParts[1]));
-    if (dateParts.length !== 3 || Number.isNaN(dateValue.valueOf())) return null;
+    // Parse YYYY-MM-DD or MM/DD/YYYY as local date
+    var dateValue;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+        var isoParts = dateString.split('-');
+        dateValue = new Date(Number(isoParts[0]), Number(isoParts[1]) - 1, Number(isoParts[2]));
+    } else {
+        var dateParts = dateString.split('/');
+        if (dateParts.length !== 3) return null;
+        dateValue = new Date(Number(dateParts[2]), Number(dateParts[0]) - 1, Number(dateParts[1]));
+    }
+    if (Number.isNaN(dateValue.valueOf())) return null;
+    // Normalize HH:MM:SS (24h) to H:MM AM/PM
+    if (/^\d{2}:\d{2}:\d{2}$/.test(timeString)) {
+        var tp = timeString.split(':');
+        var h = Number(tp[0]);
+        var ampm = h >= 12 ? 'PM' : 'AM';
+        h = h % 12 || 12;
+        timeString = h + ':' + tp[1] + ' ' + ampm;
+    }
     var severityCode = row.severity == null || row.severity === '' ? null : Number(row.severity);
     var severity = !severityCode ? 'O' : severityCode === 1 ? 'K' : severityCode === 2 ? 'I' : 'O';
     var lat = Number(row.lat);
