@@ -2,13 +2,16 @@
 
 Live map https://picturedigits.github.io/mass-crash-map
 
-Interactive map of crashes involving vulnerable users (pedestrians, cyclists, others) and motorists in Massachusetts. Built with LeafletJS and uploads CSV data that has been pre-processed from MassDOT for five regions, plus municipal data for Boston core region. Features:
+Interactive map of crashes involving vulnerable users (pedestrians, cyclists, others) and motorists in Massachusetts. Map built with LeafletJS that uploads CSV data for geographic regions that has been pre-processed and cleaned by Python notebook code.
 
+Features:
+
+- Automatically shifts from heatmap clusters (zoomed out) to symbol points (zoomed in)
 - Mobile-first design to compress or expand legend on small screens
-- Map automatically shifts from heatmap clusters (zoomed out) to symbol points (zoomed in)
+- Data for 5 regions across state from MassDOT crash database, plus Boston core region (TESTING) that integrates data from MassDOT and local government sources (City of Boston Vision Zero/Emergency Medical Services; Cambridge Police Department; Somerville Police Department)
+- Boston core data cleaning and merging code built by Boston University Spark! data science undergraduate students with BCU
 - Filter by crash type (involving pedestrians, cyclists, other vulnerable users, or motorists only)
-- Crash type filters (pedestrian, cyclist, other vulnerable users, motorists only)
-- Filter by date range, injury severity, and interstate highway (for MassDOT data only)
+- Filter by date range (2022 onward), severity (with fatalities, or with any injury), and interstate highway (for MassDOT data only)
 - Click symbol points for popup info about specific crashes
 
 ![](misc/interface.png)
