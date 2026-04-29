@@ -32,9 +32,9 @@ python3 -m http.server 8000
 
 ## Data
 
-**TODO** Add More info to come about data sources and definitions...
+**TODO** ADD MORE INFO about public data sources, definitions, disclaimers...
 
-Current default data file: `data/metro.csv`
+Current default data file: `data/boston-metro.csv`
 
 Current time period: 01 Jan 2022 to 31 Dec 2025
 
