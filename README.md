@@ -43,7 +43,7 @@ Key CSV fields used:
 
 Reminder: when updating data, change end date in script.js line 54
 
-## Merged data for Boston core with BU Spark!
+## Boston Core Data: Merge and Clean with BU Spark!
 
 Data science students from [Boston University Spark!](https://www.bu.edu/spark/) worked with us in Spring 2026 to create code to collect, clean, standardize, and de-duplicate crashes in four municipalities we define as the "Boston core" region: **City of Boston, Brookline, Cambridge, and Somerville**. See details about their work in the [BU Spark! GitHub project repository](https://github.com/BU-Spark/ds-bcu-biking).
 
@@ -56,9 +56,9 @@ We decided to de-duplicate and merge data from four distinct public data sources
 | Cambridge Police Department | Cambridge crashes | Cambridge Open Data (Socrata) |
 | Somerville Police Department | Somerville crashes | Somerville Open Data (Socrata) |
 
-BU Spark! students created a Jupyter Notebook of Python code in this repository, called `boston-core-clean-merge.ipynb`, which collects, cleans, standardizes, and de-duplicates crash records for the Boston core region from the four public data sources above. Since MassDOT and municipal crash records exist on separate platforms with no common ID numbers, we defined crashes as highly-likely duplicates if they shared a similar location (within 100 meters) during a shared 60-minute period (**TODO ILLUSTRATE**). The code output is a unified crash dataset that appears **only** in the Boston core region of this map (not the Boston metro region, which shows MassDOT data alone).  
+BU Spark! students created a Jupyter Notebook of Python code in this repository, called `boston-core-merge-clean.ipynb`, which collects, cleans, standardizes, and de-duplicates crash records for the Boston core region from the four public data sources above. Since MassDOT and municipal crash records exist on separate platforms with no common ID numbers, we defined crashes as highly-likely duplicates if they shared a similar location (within 100 meters) during a shared 60-minute period (**TODO ILLUSTRATE**). The code output is a unified crash dataset that appears **only** in the Boston core region of this map (not the Boston metro region, which shows MassDOT data alone).  
 
-### Steps in Boston core data merger
+### Steps in Boston Core Data Merge and Clean
 
 #### 1. Data Collection
 Each source is pulled via paginated API requests (batches of 2,000–5,000 records). All four sources are collected into separate DataFrames (`mass_crashes`, `bvz_crashes`, `ca_crashes`, `so_crashes`).
@@ -89,17 +89,10 @@ Because the same crash may appear in both MassDOT and a municipal dataset, a cus
 - When duplicates are found, **MassDOT records are preferred** and the municipal record is dropped
 
 ##### 6. Outputs
-
-Three CSV files are produced:
-
-| File | Description |
-|---|---|
-| `boston-core-all.csv` | All Boston core crash records merged from all four sources, including duplicates |
-| `boston-core-clean.csv` | One record per crash event; duplicates removed, MassDOT records prioritized, appears in crash map |
-| `boston-core-duplicates.csv` | Side-by-side pairs of records flagged as duplicates, with distance, time difference, and confidence score |
-
-If the notebook cannot be run, pre-generated outputs are available at:
-https://drive.google.com/drive/folders/14pxdYQC73GC8VB6watQnqMJ_IBIHDGVv
+Create 3 files in `/data` folder:
+* boston-core-all-merged.csv - contains ALL MERGED crash records from different sources, including duplicates
+* boston-core-duplicates-removed.csv - contains DUPLICATES REMOVED and displayed as side-by-side pairs of matched crash records for easy comparison
+* boston-core.csv - contains CLEANED data, after duplicates removed, with one instance for each crash, prioritizing MassDOT data because it is more comprehensive
 
 #### Jupyter Notebook Dependencies
 
