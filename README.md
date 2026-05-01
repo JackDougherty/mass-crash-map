@@ -34,15 +34,14 @@ python3 -m http.server 8000
 
 **TODO** ADD MORE INFO about public data sources, definitions, disclaimers...
 
-Current default data file: `data/boston-metro.csv`
-
-Current time period: 01 Jan 2022 to 31 Dec 2025
 
 Key CSV fields used:
 - `lat`, `lng` for map position
 - `date`, `time` for crash timestamp
 - `severity`, `pedestrian`, `cyclist`, `other`, `interstate` for filters
 - `source`, `muni`, `police` for popup details
+
+Reminder: when updating data, change end date in script.js line 54
 
 ## Merged data for Boston core with BU Spark!
 

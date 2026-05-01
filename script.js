@@ -51,7 +51,7 @@ function inputDateToTS(inputDate) {
 
 // display initial data, where Jan = 0 and Dec = 11
 var initFrom = dateToTS(new Date(2022, 0, 1));
-var initTo = dateToTS(new Date(2026, 0, 1));
+var initTo = dateToTS(new Date(2026, 3, 30));
 
 var tsCoef = 100000.0;
 
@@ -366,5 +366,5 @@ updateViewModeAvailability();
 loadRegion('boston-metro');
 
 L.control.attribution({
-    prefix: 'Code and data by <a href="https://github.com/Picturedigits/mass-crash-map">Picturedigits</a>'
+    prefix: 'Code by <a href="https://github.com/Picturedigits/mass-crash-map">Picturedigits</a> and <a href="https://github.com/BU-Spark">BU Spark</a>'
 }).addTo(map)
