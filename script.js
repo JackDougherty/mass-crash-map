@@ -366,5 +366,5 @@ updateViewModeAvailability();
 loadRegion('boston-metro');
 
 L.control.attribution({
-    prefix: 'Code by <a href="https://github.com/Picturedigits/mass-crash-map">Picturedigits</a> and <a href="https://github.com/BU-Spark">BU Spark</a>'
+    prefix: '<a href="https://github.com/Picturedigits/mass-crash-map">Code by Picturedigits</a> and <a href="https://github.com/BU-Spark">BU Spark!</a>'
 }).addTo(map)
