@@ -133,8 +133,8 @@ function getPopupHtml(crash) {
         + tsToDate(crash.d * tsCoef) + ' at ' + crash.t
         + '<br />Source: ' + (crash.source || 'Unknown')
         + '<br />Municipality: ' + (crash.muni || 'Unknown')
-        + '<br />Police force: ' + (crash.police || 'Unknown')
-        + '<br />Injury Severity: ' + (crash.s === 'K' ? 'Fatality' : crash.s === 'I' ? 'Any Injury' : 'Property damage only')
+        + '<br />Police agency: ' + (crash.police || 'Unknown')
+        + '<br />Injury level: ' + (crash.s === 'K' ? 'Fatality' : crash.s === 'I' ? 'Any Injury' : 'Property damage only')
         + '<br />Pedestrian: ' + (crash.p === 1 ? 'True' : 'False')
         + '<br />Cyclist: ' + (crash.c === 1 ? 'True' : 'False')
         + '<br />Other vulnerable road user: ' + (crash.o === 1 ? 'True' : 'False');
