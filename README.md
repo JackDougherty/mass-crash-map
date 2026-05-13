@@ -2,38 +2,41 @@
 
 Live map https://picturedigits.github.io/mass-crash-map
 
-Interactive map of crashes involving vulnerable users (pedestrians, cyclists, others) and motorists in Massachusetts. Map built with LeafletJS that uploads CSV data for geographic regions that has been pre-processed and cleaned by Python notebook code.
+Interactive map of crashes involving vulnerable roadway users (pedestrians, cyclists, others) and motorists for various regions in Massachusetts. Python notebooks clean and merge data from public sources in CSV format, which LeafletJS code displays as heatmap clusters or symbol map points.
 
-Features:
-
-- Automatically shifts from heatmap clusters (zoomed out) to symbol points (zoomed in)
-- Mobile-first design to compress or expand legend on small screens
-- Data for 5 regions across state from MassDOT crash database, plus Boston core region (TESTING) that integrates data from MassDOT and local government sources (City of Boston Vision Zero/Emergency Medical Services; Cambridge Police Department; Somerville Police Department)
-- Boston core data cleaning and merging code built by Boston University Spark! data science undergraduate students with BCU
-- Filter by crash type (involving pedestrians, cyclists, other vulnerable users, or motorists only)
+## Map features
+- Zoom level automatically shifts from heatmap clusters to symbol points
+- Mobile-first design for small screens, with arrow to expand legend
+- Filter by crash type (involving pedestrians, cyclists & micromobility users, other vulnerable users, or motorists only)
 - Filter by date range (2022 onward), severity (with fatalities, or with any injury), and interstate highway (for MassDOT data only)
 - Click symbol points for popup info about specific crashes
 
 ![](misc/interface.png)
 
-## Run map on local computer
-- Requires python3
-- Serve the repo as a static site, then open `index.html`.
-- Example: type in your terminal:
-```bash
-python3 -m http.server 8000
-```
-- Then visit `http://localhost:8000`.
-- Note: it will only work by double-clicking if the CSV is located on a remote server, not a local file.
-
 ## Credits
-- Map design by [Jack Dougherty](https://jackdougherty.org) and [Ilya Ilyankou](https://ilyankou.com) at [Picturedigits Ltd](https://www.picturedigits.com)
-- Boston core data cleaning and merging by [Boston University Spark!](https://www.bu.edu/spark/) Spring 2026 team: Abby Gualda, Alan Shao, Ethan Freshman, Konstantinos Ilias, Michelle Voong, Nicole Liu, Suhani Kapoor, and Thomas Shin
+- Map design by [Jack Dougherty](https://jackdougherty.org) and [Ilya Ilyankou](https://ilyankou.com) at [Picturedigits Ltd](https://www.picturedigits.com) in collaboration with [BCU Labs](https://labs.bostoncyclistsunion.org) of the [Boston Cyclists Union](https://bostoncyclistsunion.org)
+- Python notebook data cleaning and merging by [Boston University Spark!](https://www.bu.edu/spark/) Spring 2026 team: Abby Gualda, Alan Shao, Ethan Freshman, Konstantinos Ilias, Michelle Voong, Nicole Liu, Suhani Kapoor, and Thomas Shin. See their original work in this [BU Spark! BCU Biking repo](https://github.com/BU-Spark/ds-bcu-biking), which Jack Dougherty modified and included in the `data` folder of this repo.
 
 ## Data
+We downloaded, cleaned, and merged crash data from public sources to make it easier to patterns involving vulnerable users, specifically pedestrians and cyclists/micromobility users.
 
-**TODO** ADD MORE INFO about public data sources, definitions, disclaimers...
+- MassDOT data last updated 2026-04-30
+- City of Boston Vision Zero, data last updated 2026-04-30, but only available to 2025-12-31
+- Reminder: change end date in script.js line 54
 
+| Source | Coverage | API / Endpoint |
+|---|---|---|
+| [Mass GeoDOT Open Data Portal](https://geodot-massdot.hub.arcgis.com/pages/open-data-portal) | Statewide | [ArcGIS FeatureServer REST API](https://gis.crashdata.dot.mass.gov/arcgis/rest/services/MassDOT) |
+| [City of Boston Vision Zero](https://data.boston.gov/organization/vision-zero-boston-program) | Boston | Boston Open Data (CKAN datastore) |
+| Sources not yet included |  |  |
+| Cambridge Police Department | Cambridge | Cambridge Open Data (Socrata) |
+| Somerville Police Department | Somerville | Somerville Open Data (Socrata) |
+
+DISCLAIMER from [MassDOT Impact crash data site](https://apps.crashdata.dot.mass.gov/cdp/home): "MassDOT makes no representation as to the accuracy, adequacy, reliability, availability or completeness of the crash records or the data collected from them and is not responsible for any errors or omissions in such records or data. Under no circumstance will MassDOT have any liability for any loss or damage incurred by any party as a result of the use of the crash records or the data collected from them...In addition, any crash records or data provided for the years after 2022 are subject to change at any time and are not to be considered up-to-date or complete. As such, open years’ of crash data are for informational purposes only and should not be used for analysis..."
+
+DISCLAIMER from City of Boston Vision Zero.... to come
+
+- Data for 5 regions across state from MassDOT crash database, plus Boston core region (TESTING) that integrates data from MassDOT and local government sources (City of Boston Vision Zero/Emergency Medical Services; Cambridge Police Department; Somerville Police Department)
 
 Key CSV fields used:
 - `lat`, `lng` for map position
@@ -41,7 +44,7 @@ Key CSV fields used:
 - `severity`, `pedestrian`, `cyclist`, `other`, `interstate` for filters
 - `source`, `muni`, `police` for popup details
 
-Reminder: when updating data, change end date in script.js line 54
+
 
 
 
@@ -125,6 +128,15 @@ jupyter lab
 - **Duplicate detection runtime:** The nested-loop duplicate finder is O(n²) in the worst case. It is optimized by sorting on datetime and breaking early, but may be slow on very large datasets.
 - **Time unreliability:** Time data across sources varies in precision and reliability. This is why spatial proximity is weighted more heavily (0.7) than time proximity (0.3) in the confidence score.
 
+### Run map on your local computer
+- Requires python3
+- Serve the repo as a static site, then open `index.html`.
+- Example: type in your terminal:
+```bash
+python3 -m http.server 8000
+```
+- Then visit `http://localhost:8000`.
+- Note: it will only work by double-clicking if the CSV is located on a remote server, not a local file.
 
 ## License
 
