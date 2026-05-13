@@ -1,7 +1,18 @@
+var _initPermalink = (function () {
+    var h = window.location.hash.slice(1);
+    if (!h) return null;
+    var p = {};
+    h.split('&').forEach(function (s) {
+        var i = s.indexOf('=');
+        if (i > 0) p[decodeURIComponent(s.slice(0, i))] = decodeURIComponent(s.slice(i + 1));
+    });
+    return Object.keys(p).length ? p : null;
+}());
+
 var map = L.map('map', {
     zoomControl: false,
-    center: [42.34, -71.08],
-    zoom: 13,
+    center: (_initPermalink && _initPermalink.lat && _initPermalink.lng) ? [parseFloat(_initPermalink.lat), parseFloat(_initPermalink.lng)] : [42.34, -71.08],
+    zoom: (_initPermalink && _initPermalink.z) ? parseInt(_initPermalink.z) : 13,
     minZoom: 10,
     attributionControl: false,
     preferCanvas: true
@@ -56,6 +67,7 @@ var initTo = dateToTS(new Date(2026, 3, 30));
 var tsCoef = 100000.0;
 
 var data = [];
+var pendingPermalink = null;
 var heat = L.heatLayer([], { radius: 20 }).addTo(map);
 var individualPoints = L.layerGroup().addTo(map);
 var markerCache = new Map();
@@ -176,6 +188,31 @@ function updateStatsDashboard(crashesTotal, crashesPed, crashesCyc, crashesFatal
     $('#statInjury').text(crashesWithInjury.toLocaleString());
 }
 
+function updatePermalink() {
+    var c = map.getCenter();
+    var invMap = { pedestrians: 'ped', cyclists: 'cyc', other: 'other', vehiclesOnly: 'veh' };
+    var harmMap = { fatalInjury: 'fatal', anyInjury: 'any', propertyDamageOnly: 'pdo' };
+    var roadsMap = { roadLocalState: 'local', roadInterstate: 'interstate' };
+    var inv = Object.keys(invMap).filter(function (id) { return $('#' + id).prop('checked'); }).map(function (id) { return invMap[id]; });
+    var harm = Object.keys(harmMap).filter(function (id) { return $('#' + id).prop('checked'); }).map(function (id) { return harmMap[id]; });
+    var roads = Object.keys(roadsMap).filter(function (id) { return $('#' + id).prop('checked'); }).map(function (id) { return roadsMap[id]; });
+    var parts = [
+        'lat=' + c.lat.toFixed(5),
+        'lng=' + c.lng.toFixed(5),
+        'z=' + map.getZoom(),
+        'region=' + encodeURIComponent($('#regionFilter').val()),
+        'opacity=' + $('#intensity').val(),
+        'from=' + $('#dateFrom').val(),
+        'to=' + $('#dateTo').val(),
+        'view=' + ($('#viewPoints').prop('checked') ? 'points' : 'heatmap'),
+        'inv=' + inv.join(','),
+        'harm=' + harm.join(','),
+        'roads=' + roads.join(','),
+        'labels=' + ($('#labels').prop('checked') ? '1' : '0')
+    ];
+    history.replaceState(null, '', '#' + parts.join('&'));
+}
+
 // Given `from` and `to` timestamps, updates the heatmap layer.
 function updateHeatLayer(from, to, shouldFitMap) {
     from = dateToTS(new Date(from * 1).setHours(0, 0, 0, 0)) / tsCoef;
@@ -257,6 +294,8 @@ function updateHeatLayer(from, to, shouldFitMap) {
             { padding: [24, 24] }
         );
     }
+
+    updatePermalink();
 }
 
 var dateFromInput = $('#dateFrom');
@@ -296,10 +335,16 @@ function loadRegion(region) {
             var maxStr = tsToInputDate(maxCrashDate);
             dateFromInput.attr('min', minStr).attr('max', maxStr);
             dateToInput.attr('min', minStr).attr('max', maxStr);
-            dateFromInput.val(tsToInputDate(from));
-            dateToInput.val(tsToInputDate(to));
-
-            updateFromInputs(true);
+            if (pendingPermalink && pendingPermalink.from && pendingPermalink.to) {
+                dateFromInput.val(pendingPermalink.from);
+                dateToInput.val(pendingPermalink.to);
+                pendingPermalink = null;
+                updateFromInputs(false);
+            } else {
+                dateFromInput.val(tsToInputDate(from));
+                dateToInput.val(tsToInputDate(to));
+                updateFromInputs(true);
+            }
         }
     });
 }
@@ -356,14 +401,53 @@ map.on('zoomend', function () {
     updateFromInputs();
 });
 
+map.on('moveend', updatePermalink);
+
+$('.view-mode-toggle input').change(function () {
+    updateFromInputs();
+});
+
+$('#intensity').on('change', function () {
+    updateFromInputs();
+});
+
 // Set default UI state and load initial data
 $('#filters input[type="checkbox"]').prop('checked', 'checked');
 $('#propertyDamageOnly').prop('checked', false);
 $('#viewHeatmap').prop('checked', true);
 $('#intensity').val(5);
 $('#regionFilter').val('boston-metro');
+
+if (_initPermalink) {
+    if (_initPermalink.opacity) $('#intensity').val(_initPermalink.opacity);
+    if (_initPermalink.view === 'points') $('#viewPoints').prop('checked', true);
+    else $('#viewHeatmap').prop('checked', true);
+
+    var _inv = _initPermalink.inv ? _initPermalink.inv.split(',') : [];
+    $('#pedestrians').prop('checked', _inv.indexOf('ped') >= 0);
+    $('#cyclists').prop('checked', _inv.indexOf('cyc') >= 0);
+    $('#other').prop('checked', _inv.indexOf('other') >= 0);
+    $('#vehiclesOnly').prop('checked', _inv.indexOf('veh') >= 0);
+
+    var _harm = _initPermalink.harm ? _initPermalink.harm.split(',') : [];
+    $('#fatalInjury').prop('checked', _harm.indexOf('fatal') >= 0);
+    $('#anyInjury').prop('checked', _harm.indexOf('any') >= 0);
+    $('#propertyDamageOnly').prop('checked', _harm.indexOf('pdo') >= 0);
+
+    var _roads = _initPermalink.roads ? _initPermalink.roads.split(',') : [];
+    $('#roadLocalState').prop('checked', _roads.indexOf('local') >= 0);
+    $('#roadInterstate').prop('checked', _roads.indexOf('interstate') >= 0);
+
+    if (_initPermalink.labels === '0') { $('#labels').prop('checked', false); map.removeLayer(labels); }
+
+    if (_initPermalink.region) $('#regionFilter').val(_initPermalink.region);
+
+    pendingPermalink = _initPermalink;
+}
+
+var regionToLoad = (_initPermalink && _initPermalink.region) ? _initPermalink.region : 'boston-metro';
 updateViewModeAvailability();
-loadRegion('boston-metro');
+loadRegion(regionToLoad);
 
 L.control.attribution({
     prefix: '<a href="https://github.com/Picturedigits/mass-crash-map">Code by Picturedigits</a> and <a href="https://github.com/BU-Spark">BU Spark!</a>'
