@@ -250,7 +250,7 @@ function updateHeatLayer(from, to, shouldFitMap) {
 
     var intensity = $('#intensity').val();
     var forcePoints = $('#viewPoints').prop('checked');
-    var autoPointsAtZoom = $('#viewHeatmap').prop('checked') && map.getZoom() >= 18;
+    var autoPointsAtZoom = $('#viewHeatmap').prop('checked') && map.getZoom() >= 15;
     var showPoints = forcePoints || autoPointsAtZoom;
     $('#intensity').prop('disabled', showPoints);
     $('.intensity-wrapper').toggleClass('is-disabled', showPoints);
