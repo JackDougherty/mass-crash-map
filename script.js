@@ -401,17 +401,29 @@ $('#labels').change(function () {
     }
 });
 
-var MIN_POINTS_ZOOM = 14;
+var MIN_POINTS_ZOOM = 15;
+var _prevZoom = map.getZoom();
+
 function updateViewModeAvailability() {
-    var canShowPoints = map.getZoom() >= MIN_POINTS_ZOOM;
+    var zoom = map.getZoom();
+    var canShowPoints = zoom >= MIN_POINTS_ZOOM;
     $('#viewPoints').prop('disabled', !canShowPoints);
     $('#viewPoints').closest('label').toggleClass('is-disabled', !canShowPoints);
+    $('#viewHeatmap').prop('disabled', canShowPoints);
+    $('#viewHeatmap').closest('label').toggleClass('is-disabled', canShowPoints);
+    // Auto-shift points → heatmap when zooming out below threshold (avoids map slowdown)
     if (!canShowPoints && $('#viewPoints').prop('checked')) {
         $('#viewHeatmap').prop('checked', true);
     }
 }
 
 map.on('zoomend', function () {
+    var zoom = map.getZoom();
+    // Auto-shift heatmap → points when crossing zoom threshold going in
+    if (_prevZoom < MIN_POINTS_ZOOM && zoom >= MIN_POINTS_ZOOM && $('#viewHeatmap').prop('checked')) {
+        $('#viewPoints').prop('checked', true);
+    }
+    _prevZoom = zoom;
     updateViewModeAvailability();
     updateFromInputs();
 });
