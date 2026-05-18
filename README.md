@@ -7,8 +7,9 @@ Interactive map of crashes involving vulnerable roadway users (pedestrians, cycl
 ## Map features
 - Zoom level automatically shifts from heatmap clusters to symbol points
 - Mobile-first design for small screens, with arrow to expand legend
+- Copy browser link to share your view of the map (location, zoom level, data layer) with others
 - Filter by crash type (involving pedestrians, cyclists & micromobility users, other vulnerable users, or motorists only)
-- Filter by date range (2022 onward), severity (with fatalities, or with any injury), and interstate highway (for MassDOT data only)
+- Filter by date range (2021 onward), severity (with fatalities, or with any injury), and interstate highway (for MassDOT data only)
 - Click symbol points for popup info about specific crashes
 
 ![](misc/interface.png)
