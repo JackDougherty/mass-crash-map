@@ -20,6 +20,21 @@ var map = L.map('map', {
 
 L.control.zoom({ position: 'topright' }).addTo(map)
 
+var search = new GeoSearch.GeoSearchControl({
+    provider: new GeoSearch.OpenStreetMapProvider({
+        params: {
+            'accept-language': 'en',
+            'countrycodes': 'us',
+            'viewbox': '-73.62,41.15,-69.71,42.89',
+            'bounded': 1
+        }
+    }),
+    style: 'button',
+    searchLabel: 'Search place in MA',
+    position: 'topright',
+})
+map.addControl(search)
+
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
     subdomains: 'abcd',
