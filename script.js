@@ -477,5 +477,5 @@ updateViewModeAvailability();
 loadRegion(regionToLoad);
 
 L.control.attribution({
-    prefix: '<a href="https://github.com/Picturedigits/mass-crash-map">Code by Picturedigits</a> and <a href="https://github.com/BU-Spark">BU Spark!</a>'
+    prefix: '<a href="https://github.com/Picturedigits/mass-crash-map">Code by Picturedigits</a> + <a href="https://labs.bostoncyclistsunion.org">BCU Labs</a> + <a href="https://github.com/BU-Spark">BU Spark!</a>'
 }).addTo(map)
