@@ -75,9 +75,9 @@ function inputDateToTS(inputDate) {
     return dateToTS(d);
 }
 
-// display initial data, where Jan = 0 and Dec = 11
+// display initial date, where Jan = 0 and Dec = 11, but year and date are normal
 var initFrom = dateToTS(new Date(2022, 0, 1));
-var initTo = dateToTS(new Date(2026, 3, 30));
+var initTo = dateToTS(new Date(2026, 3, 29));
 
 var tsCoef = 100000.0;
 

@@ -21,7 +21,7 @@ Interactive map of crashes involving vulnerable roadway users (pedestrians, cycl
 - Python notebook data cleaning and merging by [Boston University Spark!](https://www.bu.edu/spark/) Spring 2026 team: Abby Gualda, Alan Shao, Ethan Freshman, Konstantinos Ilias, Michelle Voong, Nicole Liu, Suhani Kapoor, and Thomas Shin. See their original work in this [BU Spark! BCU Biking repo](https://github.com/BU-Spark/ds-bcu-biking), which Jack Dougherty modified and included in the `data` folder of this repo.
 
 ## Data
-We downloaded, cleaned, and merged crash data from public sources to make it easier to patterns involving vulnerable users, specifically pedestrians and cyclists/micromobility users.
+We downloaded, cleaned, and merged crash data from public sources to make it easier to patterns involving vulnerable users, specifically pedestrians, cyclists, and micromobility users.
 
 | Source | Coverage | API / Endpoint |
 |---|---|---|
@@ -32,7 +32,7 @@ We downloaded, cleaned, and merged crash data from public sources to make it eas
 | [Somerville Police Data Crashes](https://data.somervillema.gov/Public-Safety/Police-Data-Crashes/mtik-28va/about_data) | Somerville | Somerville Open Data (Socrata) |
 
 #### Reminder when updating data
-- change end date in script.js around line 54
+- change start and end dates in script.js around line 78
 
 DISCLAIMER from [MassDOT Impact crash data site](https://apps.crashdata.dot.mass.gov/cdp/home): "MassDOT makes no representation as to the accuracy, adequacy, reliability, availability or completeness of the crash records or the data collected from them and is not responsible for any errors or omissions in such records or data. Under no circumstance will MassDOT have any liability for any loss or damage incurred by any party as a result of the use of the crash records or the data collected from them...In addition, any crash records or data provided for the years after 2022 are subject to change at any time and are not to be considered up-to-date or complete. As such, open years’ of crash data are for informational purposes only and should not be used for analysis..."
 
@@ -58,22 +58,17 @@ We merge all data into one CSV with the following structure, where each row is a
 
 #### Grouping Vulnerable Roadway Users into 3 Broad Categories
 We collaborated with a team of undergraduate data science students from [Boston University Spark!](https://www.bu.edu/spark/) to make crash reports more meaningful for public use. First, the BU Spark! team wrote Python code notebooks to download and pre-process public crash data to be displayed in the map. For example, MassDOT collect crash reports filed by state and local police officers across the state, who use forms with more than 20 different labels for various types of vulnerable roadway users. We grouped these labels into three broad categories, based on their general speed relative to each other:
+
 - Slower-speed vulnerable users, such as pedestrians and people in wheelchairs
 - Medium-speed vulnerable users, such as bicyclists, skaters, and non-motorized scooters
-- Higher-speed vulnerable users, such as "motorized bicyclists" (as defined by MA General Law) and "other" users who do not neatly fit into categories above (such as trolley/train passengers)
+- Higher-speed vulnerable users, such as "motorized bicyclists" and "motorized scooters" (with a gas motor, as currently defined by MA General Law) and "other" users who do not neatly fit into categories above (such as trolley/train passengers)
 
-Since we aim to create a Massachusetts Crash Map that is easy to understand, we have recoded over 20 different types of vulnerable roadway users that appear in MassDOT crash data reports. While MassDOT intended vulernable user types to be standardized (such as "Pedestrians" and "Bicyclists"), in practice the data is pulled from various police reports across the states, with varying levels of quality and uniformity. Also, labels for different devices are ambiguous. For example, current MA General Law uses the term "Motorized Bicyclist" to mean a "moped" (with a gas motor), not an e-bike.
-
-Data Limitations - The MassDOT crash reports include two fields were police officers may select from a drop-down menu of various types of vulnerable users, or harmful events that involved vulnerable users:
+The MassDOT crash reports include two columns were police officers may select from a drop-down menu of various types of vulnerable users, or harmful events that involved vulnerable users. However, these two columns are not always internally consistent. For example, a crash report may list "Pedestrian" as a Non-Motorist Type in column 1, but might not include "Collision with pedestrian" as Most Harmful Event in column 2, and vice versa.
 
 - NON_MTRST_TYPE_CL (Non-Motorist Type), shown as column1 below
 - MOST_HRMFL_EVT_CL (Most Harmful Event), shown as column2 below
 
-TODO - recreate as table with column1 terms (Bicyclist) vs column2 terms (Collision with Cyclist), etc
-
-However, the MassDOT crash records drawn from local police may not be internally consistent. For example, a crash report may list "Pedestrian" as a Non-Motorist Type in column 1, but NOT include "Collision with pedestrian" as Most Harmful Event in column 2, and vice versa.
-
-Method: While there is no perfect method, we decided to condense similar types of vulnerable users (as listed in MassDOT crash records) into three broad categories, based on their GENERAL SPEED (not their actual speed during specific crashes):
+TODO - REFORMAT as table with column1 terms (Bicyclist) vs column2 terms (Collision with Cyclist), etc
 
 Pedestrians - and related users who generally travel at LOW speeds
 
@@ -104,20 +99,18 @@ Other vulnerable users who generally travel at HIGHER speeds OR do not fit eithe
 - Farm Equipment Operator
 - Unknown
 
-We do not intend these columns to be mutually exclusive. For example, if a MassDOT crash recorded both a pedestrian and a cyclist as vulnerable users, both columns would have a value of 1. However, other crash records (such as Boston Vision Zero) are mutually exclusive and report only "ped" or "bike".
+We do not intend these columns to be mutually exclusive. For example, if a MassDOT crash recorded both a pedestrian and a cyclist as vulnerable users, both columns would have a value of 1. However, crash records from some local government sources (such as Boston Vision Zero) are mutually exclusive and report only "ped" or "bike" (or "mv" for motor vehicle).
 
 #### Known Data Limitations
 - **Unreliable timestamps:** Time data across sources varies in reliability. During testing, it may be *possible* that City of Boston Vision Zero data has a 4- or 5-hour time zone shift from Eastern Time to Greenwich Mean Time (UTC). This is why spatial proximity is weighted more heavily than time proximity in the confidence score.
 - **Duplicate detection runtime:** The nested-loop duplicate finder is O(n²) in the worst case. It is optimized by sorting on datetime and breaking early, but may be slow on very large datasets.
 - **Cambridge PD geocoding:** ~16,911 Cambridge crash records have street addresses with latitude/longitude at the end of the address field, OR no latitude/longitude but sometimes intersecting streets. We need more testing to clean and extract lat/long, or geocoding intersecting streets using a resource such as Google Cloud API key (estimated cost ~$200). Commented-out code using `googlemaps` is included at the bottom of the notebook for future use.
 
-## Boston Core Data: Merge and Clean with BU Spark!
+## TESTING AND EDITING -- Boston Core Data: Merge and Clean with BU Spark!
 
 Data science students from [Boston University Spark!](https://www.bu.edu/spark/) worked with us in Spring 2026 to create code to collect, clean, standardize, and de-duplicate crashes in four municipalities we define as the "Boston core" region: **City of Boston, Brookline, Cambridge, and Somerville**. See details about their work in the [BU Spark! GitHub project repository](https://github.com/BU-Spark/ds-bcu-biking).
 
 We decided to de-duplicate and merge data from four distinct public data sources because each contained data that did not appear in the other. Although MassDOT crash data is the most comprehensive, we found significant numbers of crashes in municipal datasets that did not appear in the MassDOT statewide records. **TODO: clarify differences** For our Boston core region, we compared four public crash data sources listed below. (Since Brookline does not maintain a public crash repository, all crashes in Brookline came solely from the MassDOT dataset.)
-
-
 
 BU Spark! students created a Jupyter Notebook of Python code in this repository, called `boston-core-merge-clean.ipynb`, which collects, cleans, standardizes, and de-duplicates crash records for the Boston core region from the four public data sources above. Since MassDOT and municipal crash records exist on separate platforms with no common ID numbers, we defined crashes as highly-likely duplicates if they shared a similar location (within 100 meters) during a shared 60-minute period (**TODO ILLUSTRATE**). The code output is a unified crash dataset that appears **only** in the Boston core region of this map (not the Boston metro region, which shows MassDOT data alone).  
 
@@ -180,8 +173,6 @@ Launch on local computer:
 ```bash   
 jupyter lab    
 ```
-
-
 
 ### Run map on your local computer
 - Requires python3
