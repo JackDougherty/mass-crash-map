@@ -438,6 +438,23 @@ $('#intensity').on('change', function () {
     updateFromInputs();
 });
 
+function resetToDefaults() {
+    map.setView([42.34, -71.08], 13);
+    $('#filters input[type="checkbox"]').prop('checked', 'checked');
+    $('#propertyDamageOnly').prop('checked', false);
+    $('#viewHeatmap').prop('checked', true);
+    $('#intensity').val(5);
+    $('#regionFilter').val('boston-metro');
+    if (!$('#labels').prop('checked')) {
+        $('#labels').prop('checked', true);
+        labels.addTo(map);
+    }
+    updateViewModeAvailability();
+    loadRegion('boston-metro');
+}
+
+$('#mapTitle').on('click', resetToDefaults);
+
 // Set default UI state and load initial data
 $('#filters input[type="checkbox"]').prop('checked', 'checked');
 $('#propertyDamageOnly').prop('checked', false);
