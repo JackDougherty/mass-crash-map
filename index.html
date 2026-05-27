@@ -36,8 +36,8 @@
       <div class="title-row">
         <a href="https://bostoncyclistsunion.org/" target="_blank" class="partner-logo"><img src="misc/bcu-logo.png" alt="Boston Cyclists Union" /></a>
         <div>
-          <h1 class="f3 mt0 mb0">Massachusetts Crash Map</h1>
-          <p class="f6 gray mt1 mb0"><a href="https://github.com/picturedigits/mass-crash-map#data" target="_blank" class="dim">About the data</a> last updated 27 May 2026</p>
+          <h1 id="mapTitle" class="f3 mt0 mb0" title="Click to reset to default view" style="cursor:pointer">Massachusetts Crash Map</h1>
+          <p class="f6 gray mt1 mb0">See <a href="https://github.com/picturedigits/mass-crash-map#data" target="_blank" class="dim">data & definitions & disclaimers</a></p>
         </div>
       </div>
       <button id="legendToggle" aria-label="Toggle filters" aria-expanded="false">&#9660;</button>
@@ -177,6 +177,10 @@
 
   <script src="https://cdn.jsdelivr.net/npm/leaflet-geosearch@3/dist/geosearch.umd.js"></script>
   <script src="./script.js"></script>
+
+  <!-- Cloudflare Web Analytics -->
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b7ca206f6d6346b08d902b40bb214818"}'></script>
+  <!-- End Cloudflare Web Analytics -->
 
 </body>
 
