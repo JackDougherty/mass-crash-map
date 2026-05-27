@@ -76,8 +76,8 @@ function inputDateToTS(inputDate) {
 }
 
 // display initial date, where Jan = 0 and Dec = 11, but year and date are normal
-var initFrom = dateToTS(new Date(2022, 0, 1));
-var initTo = dateToTS(new Date(2026, 3, 29));
+var initFrom = dateToTS(new Date(2021, 0, 1));
+var initTo = dateToTS(new Date(2026, 5, 27));
 
 var tsCoef = 100000.0;
 
@@ -437,23 +437,6 @@ $('.view-mode-toggle input').change(function () {
 $('#intensity').on('change', function () {
     updateFromInputs();
 });
-
-function resetToDefaults() {
-    map.setView([42.34, -71.08], 13);
-    $('#filters input[type="checkbox"]').prop('checked', 'checked');
-    $('#propertyDamageOnly').prop('checked', false);
-    $('#viewHeatmap').prop('checked', true);
-    $('#intensity').val(5);
-    $('#regionFilter').val('boston-metro');
-    if (!$('#labels').prop('checked')) {
-        $('#labels').prop('checked', true);
-        labels.addTo(map);
-    }
-    updateViewModeAvailability();
-    loadRegion('boston-metro');
-}
-
-$('#mapTitle').on('click', resetToDefaults);
 
 // Set default UI state and load initial data
 $('#filters input[type="checkbox"]').prop('checked', 'checked');
