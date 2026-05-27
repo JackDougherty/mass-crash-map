@@ -21,7 +21,12 @@ Interactive map of crashes involving vulnerable roadway users (pedestrians, cycl
 - Python notebook data cleaning and merging by [Boston University Spark!](https://www.bu.edu/spark/) Spring 2026 team: Abby Gualda, Alan Shao, Ethan Freshman, Konstantinos Ilias, Michelle Voong, Nicole Liu, Suhani Kapoor, and Thomas Shin. See their original work in this [BU Spark! BCU Biking repo](https://github.com/BU-Spark/ds-bcu-biking), which Jack Dougherty modified and included in the `data` folder of this repo.
 
 ## Data
-We downloaded, cleaned, and merged crash data from public sources to make it easier to patterns involving vulnerable users, specifically pedestrians, cyclists, and micromobility users.
+We downloaded, cleaned, and merged data from public sources to make it easier to visualize crash patterns involving vulnerable users, specifically pedestrians, cyclists, and micromobility users.
+
+**Crash data last updated on 27 May 2026** from sources below, and will be updated monthly.
+<!-- TODO update index AND start/end dates in script.js around line 78 -->
+
+**Caution:** Crash reports may appear several weeks (or months) after the actual incident due to time required for police or EMS to complete them (especially for crashes that require police to receive toxicology reports), and lag time for municipal or state authorities to upload these reports into public datasets.
 
 | Source | Coverage | API / Endpoint |
 |---|---|---|
@@ -31,15 +36,23 @@ We downloaded, cleaned, and merged crash data from public sources to make it eas
 | [Cambridge Police Department Crash Log](https://data.cambridgema.gov/Public-Safety/CPD-Crash-Log/h6fp-bp8s/about_data) | Cambridge | Cambridge Open Data (Socrata) |
 | [Somerville Police Data Crashes](https://data.somervillema.gov/Public-Safety/Police-Data-Crashes/mtik-28va/about_data) | Somerville | Somerville Open Data (Socrata) |
 
-#### Reminder when updating data
-- change start and end dates in script.js around line 78
-
 DISCLAIMER from [MassDOT Impact crash data site](https://apps.crashdata.dot.mass.gov/cdp/home): "MassDOT makes no representation as to the accuracy, adequacy, reliability, availability or completeness of the crash records or the data collected from them and is not responsible for any errors or omissions in such records or data. Under no circumstance will MassDOT have any liability for any loss or damage incurred by any party as a result of the use of the crash records or the data collected from them...In addition, any crash records or data provided for the years after 2022 are subject to change at any time and are not to be considered up-to-date or complete. As such, open years’ of crash data are for informational purposes only and should not be used for analysis..."
 
-TODO: ADD DISCLAIMERS for City of Boston Vision Zero... and other public sources
+<!-- TODO: ADD DISCLAIMERS for City of Boston Vision Zero... and other public sources -->
+
+#### Defining Massachusetts regions
+Since various state agencies define regions in various ways, we carved  the state into five areas by re-grouping the 13 Regional Planning Areas acronyms (which appear in the MassDOT crash data) into 5 more commonly-used geographic terms:
+
+```
+boston-metro = ['MAPC']
+#central = ['MRPC','CMRPC']
+#northeast = ['NMCOG','MVPC']
+#southeast = ['CCC','MVC','NRPEDC','OCPC','SRPEDD']
+#western = ['BRPC','FRCOG','PVPC']
+```
 
 #### Data structure
-We merge all data into one CSV with the following structure, where each row is an individual crash, and columns show attributes of each crash:
+We merged all data into one CSV with the following structure, where each row is an individual crash, and columns show attributes of each crash:
 
 - source: of crash data (MassDOT, BostonVZInjury, BostonVZFatality)
 - id: unique identifier of each crash (originals from MassDOT; created our own from index number for Boston Vision Zero)
