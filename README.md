@@ -1,12 +1,16 @@
 # mass-crash-map
 
-## Live map links
+## Live links
 - https://picturedigits.github.io/mass-crash-map
 - https://labs.bostoncyclistsunion.org/crashes/
 
 Interactive map of crashes involving vulnerable roadway users (pedestrians, cyclists, others) and motorists for various regions in Massachusetts. Python notebooks clean and merge data from public sources in CSV format, which LeafletJS code displays as heatmap clusters or symbol map points.
 
-## Map features
+## Credits
+- Map design by [Jack Dougherty](https://jackdougherty.org) and [Ilya Ilyankou](https://ilyankou.com) at [Picturedigits Ltd](https://www.picturedigits.com) in collaboration with [BCU Labs](https://labs.bostoncyclistsunion.org) of the [Boston Cyclists Union](https://bostoncyclistsunion.org)
+- Python notebook data cleaning and merging by [Boston University Spark!](https://www.bu.edu/spark/) Spring 2026 team: Abby Gualda, Alan Shao, Ethan Freshman, Konstantinos Ilias, Michelle Voong, Nicole Liu, Suhani Kapoor, and Thomas Shin. See their original work in this [BU Spark! BCU Biking repo](https://github.com/BU-Spark/ds-bcu-biking), which Jack Dougherty modified and included in the `data` folder of this repo.
+
+## Map
 - Zooming in automatically shifts display from broad heatmap clusters to street-level symbol points
 - Mobile-first design works both on smaller screens (click arrow to expand legend on smartphone) and larger screens
 - Copy browser link to share your view of the map (location, zoom level, data layer) with others
@@ -14,11 +18,9 @@ Interactive map of crashes involving vulnerable roadway users (pedestrians, cycl
 - Filter by date range (2021 onward), severity (with fatalities, or with any injury), and interstate highway (for MassDOT data only)
 - Click symbol points for popup info about specific crashes
 
-![](misc/interface.png)
+- [Share your feedback about the Mass Crash Map](https://forms.gle/kLhR3muWdTuQtSz58) with BCU Labs 
 
-## Credits
-- Map design by [Jack Dougherty](https://jackdougherty.org) and [Ilya Ilyankou](https://ilyankou.com) at [Picturedigits Ltd](https://www.picturedigits.com) in collaboration with [BCU Labs](https://labs.bostoncyclistsunion.org) of the [Boston Cyclists Union](https://bostoncyclistsunion.org)
-- Python notebook data cleaning and merging by [Boston University Spark!](https://www.bu.edu/spark/) Spring 2026 team: Abby Gualda, Alan Shao, Ethan Freshman, Konstantinos Ilias, Michelle Voong, Nicole Liu, Suhani Kapoor, and Thomas Shin. See their original work in this [BU Spark! BCU Biking repo](https://github.com/BU-Spark/ds-bcu-biking), which Jack Dougherty modified and included in the `data` folder of this repo.
+![](misc/interface.png)
 
 ## Data
 We downloaded, cleaned, and merged data from public sources to make it easier to visualize crash patterns involving vulnerable users, specifically pedestrians, cyclists, and micromobility users.
