@@ -18,14 +18,14 @@ Interactive map of crashes involving vulnerable roadway users (pedestrians, cycl
 - Filter by date range (2021 onward), severity (with fatalities, or with any injury), and interstate highway (for MassDOT data only)
 - Click symbol points for popup info about specific crashes
 
-- [Share your feedback about the Mass Crash Map](https://forms.gle/kLhR3muWdTuQtSz58) with BCU Labs 
+- [Share your feedback about the Mass Crash Map](https://forms.gle/kLhR3muWdTuQtSz58) with BCU Labs
 
 ![](misc/interface.png)
 
 ## Data
 We downloaded, cleaned, and merged data from public sources to make it easier to visualize crash patterns involving vulnerable users, specifically pedestrians, cyclists, and micromobility users.
 
-**Crash data last updated on 27 May 2026** from sources below, and will be updated monthly.
+**Crash data last updated on 1 July 2026** from sources below, and will be updated monthly.
 <!-- TODO update index AND start/end dates in script.js around line 78 -->
 
 **Caution:** Crash reports may appear several weeks (or months) after the actual incident due to time required for police or EMS to complete them (especially for crashes that require police to receive toxicology reports), and lag time for municipal or state authorities to upload these reports into public datasets.
